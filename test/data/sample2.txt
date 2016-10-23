@@ -1,0 +1,16 @@
+int apple;
+int orange;
+orange = 2;
+apple = 1;
+apple = apple + 1;
+orange = apple + orange;
+if (orange == 2){
+	printf("%d", apple);
+}
+else if(orange == 3){
+	printf("%d", apple);
+}
+else{
+	printf("%d", orange);
+}
+printf("%d", orange);
