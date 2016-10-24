@@ -15,7 +15,7 @@ class ClikeParser {
 
   AstNode *ParseBlockBody(TokenIterator &p); // the block without {}
   AstNode *ParseBraceBlock(TokenIterator &p); // the block with {}
-  AstNode *ParseSubBlock(TokenIterator &p); // the block after if & for & while
+  AstNode *ParseLineOrBlock(TokenIterator &p); // the block after if & for & while
   AstNode *ParseLine(TokenIterator &p); // the block with {}
 
   AstNode *ParseTypeHead(TokenIterator &p); // int x, y = 1;

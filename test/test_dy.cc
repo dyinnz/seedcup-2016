@@ -49,7 +49,7 @@ ScopeGuard [&] { delete[] name; };
 
 int main() {
   logger.set_log_level(kDebug);
-  GET_FILE_DATA_SAFELY(data, size, "test/data/dy-debug");
+  GET_FILE_DATA_SAFELY(data, size, "test/data/dy-debug.c");
   logger.debug("\n{}", data);
 
   auto tokenizer = clike_grammar::BuilderClikeTokenizer();

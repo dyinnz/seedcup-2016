@@ -59,7 +59,7 @@ Tokenizer BuilderClikeTokenizer() {
   builder
       .SetLineComment("//")
       .SetBlockComment("/*", "*/")
-      .SetIgnoreSet({kSpaceSymbol});
+      .SetIgnoreSet({kSpaceSymbol, kLFSymbol});
 
   builder.SetPatterns(
       {

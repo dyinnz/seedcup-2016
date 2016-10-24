@@ -142,7 +142,8 @@ bool Tokenizer::LexicalAnalyze(const char *beg,
     }
     // skip ignored token
     if (ignore_set_.end() == ignore_set_.find(token.symbol)) {
-      if (!(token.symbol == kLFSymbol && tokens.back().symbol == kLFSymbol)) {
+      if (!(token.symbol == kLFSymbol && !tokens.empty()
+          && tokens.back().symbol == kLFSymbol)) {
         tokens.push_back(move(token));
       }
     }
