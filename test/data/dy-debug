@@ -1,0 +1,4 @@
+int x;
+int x, y = 1, z=2;
+x = -10 + hehe ;
+printf("I have a pen. %d\n", pen);

@@ -50,6 +50,8 @@ TERMINAL(kGE) // >=
 TERMINAL(kEQ) // ==
 TERMINAL(kNE) // !=
 
+NON_TERMINAL(kBlock)
+
 Tokenizer BuilderClikeTokenizer() {
   TokenizerBuilder builder;
 
@@ -70,6 +72,8 @@ Tokenizer BuilderClikeTokenizer() {
           {"break", kBreak},
           {"while", kWhile},
           {"do", kDo},
+          {"int", kInt},
+          {"printf", kPrintf},
           // multi-char operator
           {R"(\+\+)", kInc},
           {"--", kDec},

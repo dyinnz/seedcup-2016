@@ -112,7 +112,7 @@ bool Tokenizer::LexicalAnalyze(const char *beg,
   beg_ = beg;
   end_ = end;
 
-  curr_row_ = 0;
+  curr_row_ = 1;
   curr_row_pos_ = beg_;
 
   curr_ = beg;
