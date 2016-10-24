@@ -8,6 +8,7 @@
 
 namespace clike_grammar {
 
+// Terminal
 // keyword
 DECLARE_SYMBOL(kIf, 11)
 DECLARE_SYMBOL(kElse, 12)
@@ -52,6 +53,11 @@ DECLARE_SYMBOL(kLE, 33) // <=
 DECLARE_SYMBOL(kGE, 34) // >=
 DECLARE_SYMBOL(kEQ, 35) // ==
 DECLARE_SYMBOL(kNE, 36) // !=
+
+
+// Non-Terminal
+DECLARE_SYMBOL(kBlock, 51)
+DECLARE_SYMBOL(kIfRoot, 52)
 
 Tokenizer BuilderClikeTokenizer();
 
