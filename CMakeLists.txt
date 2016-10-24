@@ -23,3 +23,10 @@ add_executable(test_tokenizer
         src/finite_automaton.cc
         src/regex_parser.cc
         src/tokenizer.cc)
+
+add_executable(test_clang
+        test/test_clang.cc
+        src/finite_automaton.cc
+        src/regex_parser.cc
+        src/tokenizer.cc
+	src/clike_grammar.cc)
