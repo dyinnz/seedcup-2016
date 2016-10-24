@@ -38,4 +38,8 @@ add_executable(test_clang
         src/finite_automaton.cc
         src/regex_parser.cc
         src/tokenizer.cc
-	src/clike_grammar.cc)
+		src/clike_grammar.cc)
+
+add_executable(test_hl
+		src/symbol_table.cpp
+		test/test_hl.cpp)
