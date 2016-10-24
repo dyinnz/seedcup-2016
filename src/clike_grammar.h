@@ -57,6 +57,7 @@ DECLARE_SYMBOL(kNE, 36) // !=
 
 // Non-Terminal
 DECLARE_SYMBOL(kBlock, 51)
+DECLARE_SYMBOL(kIfRoot, 52)
 
 Tokenizer BuilderClikeTokenizer();
 

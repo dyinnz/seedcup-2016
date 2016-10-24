@@ -51,6 +51,7 @@ TERMINAL(kEQ) // ==
 TERMINAL(kNE) // !=
 
 NON_TERMINAL(kBlock)
+NON_TERMINAL(kIfRoot)
 
 Tokenizer BuilderClikeTokenizer() {
   TokenizerBuilder builder;

@@ -13,13 +13,12 @@ class ClikeParser {
  public:
   Ast Parse(std::vector<Token> &tokens);
 
-  AstNode* ParseBlockBody(TokenIterator &p); // the block with {}
+  AstNode* ParseBlockBody(TokenIterator &p); // the block without {}
   AstNode* ParseBraceBlock(TokenIterator &p); // the block with {}
+  AstNode* ParseLine(TokenIterator &p); // the block with {}
   AstNode* ParseSubBlock(TokenIterator &p); // the block after if & for & while
 
   AstNode *ParseTypeHead(TokenIterator &p); // int x, y = 1;
-  AstNode* ParseDeclare(TokenIterator &p); // int x;
-  // AstNode* ParseDefine(TokenIterator &p); // int x = 1;
   AstNode* ParseAssign(TokenIterator &p); // x = 1;
 
   AstNode* ParseExpr(TokenIterator &p);

@@ -2,6 +2,7 @@
 // Created by coder on 16-10-24.
 //
 
+#include <iterator>
 #include "simplelogger.h"
 #include "clike_grammar.h"
 #include "clike_parser.h"
@@ -51,15 +52,15 @@ Ast ClikeParser::Parse(std::vector<Token> &tokens) {
 AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
   // type int
   if (kInt != p->symbol) {
-    logger.error("There should be a type {}", to_string(*p));
+    logger.error("expect a type {}", to_string(*p));
     return nullptr;
   }
-  auto decl_node = ast_.CreateDeclare(move(*p));
+  auto decl_node = ast_.CreateTypeHead(move(*p));
   ++p;
 
   auto parse_decl_def = [&]() -> AstNode * {
     if (kIdentifier != p->symbol) {
-      logger.error("There should be a identifier {}", to_string(*p));
+      logger.error("expect a identifier {}", to_string(*p));
     }
     auto identifier = ast_.CreateTerminal(move(*p));
     ++p;
@@ -84,7 +85,7 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
   // first declaration or definition
   auto sub_node = parse_decl_def();
   if (!sub_node) {
-    logger.log("There should be a declaration or definition {}", to_string(*p));
+    logger.log("expect a declaration or definition {}", to_string(*p));
     return nullptr;
   }
   decl_node->push_child_back(sub_node);
@@ -92,14 +93,14 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
   while (kSemicolon != p->symbol) {
     // skip ,
     if (kComma != p->symbol) {
-      logger.log("There should be a , {}", to_string(*p));
+      logger.log("expect a , {}", to_string(*p));
       continue;
     } else {
       ++p;
     }
 
     if (nullptr == (sub_node = parse_decl_def())) {
-      logger.log("There should be a declaration or definition {}",
+      logger.log("expect a declaration or definition {}",
                  to_string(*p));
       return nullptr;
     }
@@ -111,46 +112,11 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
   return decl_node;
 }
 
-AstNode *ClikeParser::ParseDeclare(TokenIterator &p) {
-  // type int
-  if (kInt != p->symbol) {
-    return nullptr;
-  }
-  auto decl_node = ast_.CreateDeclare(move(*p));
-  ++p;
-
-  // first declaration
-  if (kIdentifier != p->symbol) {
-    return nullptr;
-  }
-  decl_node->push_child_back(ast_.CreateTerminal(move(*p)));
-  ++p;
-
-  while (kSemicolon != p->symbol) {
-    if (kComma != p->symbol) {
-      continue;
-    }
-    // skip comma: ,
-    ++p;
-
-    if (kIdentifier != p->symbol) {
-      continue;
-    }
-    // add other declaration
-    decl_node->push_child_back(ast_.CreateTerminal(move(*p)));
-    ++p;
-  }
-
-  // skip ;
-  ++p;
-  return decl_node;
-}
-
 // TODO: assign list
 AstNode *ClikeParser::ParseAssign(TokenIterator &p) {
   // identifier
   if (kIdentifier != p->symbol) {
-    logger.error("There should be a identifier {}", to_string(*p));
+    logger.error("expect a identifier {}", to_string(*p));
     return nullptr;
   }
   auto identifier = ast_.CreateTerminal(move(*p));
@@ -158,7 +124,7 @@ AstNode *ClikeParser::ParseAssign(TokenIterator &p) {
 
   // =
   if (kAssign != p->symbol) {
-    logger.error("There should be a = {}", to_string(*p));
+    logger.error("expect a = {}", to_string(*p));
     return nullptr;
   }
   auto assign = ast_.CreateAssign(move(*p));
@@ -171,7 +137,7 @@ AstNode *ClikeParser::ParseAssign(TokenIterator &p) {
   assign->push_child_back(expr);
 
   if (kSemicolon != p->symbol) {
-    logger.error("There should be a ; {}", to_string(*p));
+    logger.error("expect a ; {}", to_string(*p));
     return nullptr;
   }
   ++p;
@@ -267,7 +233,7 @@ AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
 
     // end with )
     if (kRightParen != p->symbol) {
-      logger.error("There should be a ) {}", to_string(*p));
+      logger.error("expect a ) {}", to_string(*p));
       return nullptr;
     }
     ++p;
@@ -277,7 +243,7 @@ AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
   } else {
     // begin with identifier & positive number
     if (kNumber != p->symbol && kIdentifier != p->symbol) {
-      logger.error("There should be a number or identifier {}", to_string(*p));
+      logger.error("expect a number or identifier {}", to_string(*p));
       return nullptr;
     }
     auto primary = ast_.CreateTerminal(move(*p));
@@ -289,7 +255,7 @@ AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
 
 AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
   if (kPrintf != p->symbol) {
-    logger.error("There should be a printf {}", to_string(*p));
+    logger.error("expect a printf {}", to_string(*p));
     return nullptr;
   }
 
@@ -305,9 +271,76 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
 
 AstNode *ClikeParser::ParseIf(TokenIterator &p) {
   if (kIf != p->symbol) {
-    logger.error("There should be a if {}", to_string(*p));
+    logger.error("expect a if {}", to_string(*p));
     return nullptr;
   }
 
-  auto
+  auto if_root = ast_.CreateIfRoot(kIfRoot);
+
+  while (kIf == p->symbol) {
+    auto clause = ast_.CreateIfClause(move(*p));
+    ++p;
+    
+    if (kLeftParen != p->symbol) {
+      logger.error("expect a ( {}", to_string(*p));
+      return nullptr;
+    }
+    ++p;
+
+    auto head = ParseExpr(p);
+
+    if (kRightParen != p->symbol) {
+      logger.error("expect a ) {}", to_string(*p));
+      return nullptr;
+    }
+    ++p;
+
+    auto body = ParseSubBlock(p);
+
+    clause->push_child_back(head);
+    clause->push_child_back(body);
+
+    if_root->push_child_back(clause);
+
+    if (kElse == p->symbol) {
+      if (kIf == next(p)->symbol) {
+        // skip else
+        ++p;
+      } else {
+        auto else_clause = ast_.CreateIfClause(move(*p));
+        auto else_body = ParseSubBlock(p);
+        else_clause->push_child_back(else_body);
+        if_root->push_child_back(else_clause);
+        break;
+      }
+    }
+  }
+  return if_root;
+}
+
+AstNode* ClikeParser::ParseLine(TokenIterator &p) {
+  return nullptr;
+}
+
+AstNode *ClikeParser::ParseBlockBody(TokenIterator &p) {
+  return nullptr;
+}
+
+AstNode* ClikeParser::ParseSubBlock(TokenIterator &p) {
+  if (kLeftBrace == p->symbol) {
+    ++p;
+
+    auto block = ParseBlockBody(p);
+
+    if (kRightParen != p->symbol) {
+      logger.error("expect righ-brace {}", to_string(*p));
+      return nullptr;
+    }
+    ++p;
+
+    return block;
+
+  } else {
+    return ParseLine(p);
+  }
 }

@@ -80,12 +80,12 @@ class TerminalNode : public AstNode {
   Token token_;
 };
 
-class DeclareNode : public TerminalNode {
+class TypeHeadNode : public TerminalNode {
  public:
-  virtual ~DeclareNode() {
+  virtual ~TypeHeadNode() {
   }
 
-  DeclareNode(Token &&token) : TerminalNode(std::move(token)) {}
+  TypeHeadNode(Token &&token) : TerminalNode(std::move(token)) {}
 };
 
 class DefineNode : public NonTerminalNode {
@@ -119,9 +119,9 @@ class BlockNode : public NonTerminalNode {
 
 };
 
-class IfBlockNode : public NonTerminalNode {
+class IfRootNode : public NonTerminalNode {
  public:
-  IfBlockNode(const Symbol &symbol) : NonTerminalNode(symbol) {}
+  IfRootNode(const Symbol &symbol) : NonTerminalNode(symbol) {}
 };
 
 class IfClauseNode : public TerminalNode {
@@ -153,8 +153,8 @@ class Ast {
     return p;
   }
 
-  DeclareNode *CreateDeclare(Token &&token) {
-    auto p = new DeclareNode(std::move(token));
+  TypeHeadNode *CreateTypeHead(Token &&token) {
+    auto p = new TypeHeadNode(std::move(token));
     node_manager_.push_back(p);
     return p;
   }
@@ -189,8 +189,8 @@ class Ast {
     return p;
   }
 
-  IfBlockNode *CreateIfBlock(const Symbol &symbol) {
-    auto p = new IfBlockNode(symbol);
+  IfRootNode *CreateIfRoot(const Symbol &symbol) {
+    auto p = new IfRootNode(symbol);
     node_manager_.push_back(p);
     return p;
   }
