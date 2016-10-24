@@ -32,7 +32,7 @@ Ast ClikeParser::Parse(std::vector<Token> &tokens) {
     if (kInt == p->symbol) {
       next = ParseTypeHead(p);
     } else if (kIdentifier == p->symbol) {
-      next = ParseAssign(p);
+      next = ParseExprStmt(p);
     } else if (kPrintf == p->symbol) {
       next = ParsePrintf(p);
     } else {
@@ -74,7 +74,8 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
       auto assign = ast_.CreateAssign(move(*p));
       ++p;
 
-      auto expr = ParseExpr(p);
+      // TODO: should use ParseCommaExpr()
+      auto expr = ParseAssignExpr(p);
 
       assign->push_child_back(identifier);
       assign->push_child_back(expr);
@@ -112,116 +113,14 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
   return decl_node;
 }
 
-// TODO: assign list
-AstNode *ClikeParser::ParseAssign(TokenIterator &p) {
-  // identifier
-  if (kIdentifier != p->symbol) {
-    logger.error("expect a identifier {}", to_string(*p));
-    return nullptr;
-  }
-  auto identifier = ast_.CreateTerminal(move(*p));
-  ++p;
-
-  // =
-  if (kAssign != p->symbol) {
-    logger.error("expect a = {}", to_string(*p));
-    return nullptr;
-  }
-  auto assign = ast_.CreateAssign(move(*p));
-  ++p;
-
-  // expr
+AstNode *ClikeParser::ParseExprStmt(TokenIterator &p) {
   auto expr = ParseExpr(p);
-
-  assign->push_child_back(identifier);
-  assign->push_child_back(expr);
-
   if (kSemicolon != p->symbol) {
     logger.error("expect a ; {}", to_string(*p));
     return nullptr;
   }
   ++p;
-  return assign;
-}
-
-AstNode *ClikeParser::ParseExpr(TokenIterator &p) {
-  auto curr_expr = ParseTermExpr(p);
-
-  while (kAdd == p->symbol || kSub == p->symbol) {
-    auto addsub_op = ast_.CreateTerminal(move(*p));
-    ++p;
-
-    auto rhs_expr = ParseTermExpr(p);
-    addsub_op->push_child_back(curr_expr);
-    addsub_op->push_child_back(rhs_expr);
-    curr_expr = addsub_op;
-  }
-
-  return curr_expr;
-}
-
-AstNode *ClikeParser::ParseTermExpr(TokenIterator &p) {
-  auto curr_expr = ParseUnaryExpr(p);
-
-  while (kMul == p->symbol || kDiv == p->symbol) {
-    auto muldiv_op = ast_.CreateTerminal(move(*p));
-    ++p;
-
-    auto rhs_expr = ParseUnaryExpr(p);
-    muldiv_op->push_child_back(curr_expr);
-    muldiv_op->push_child_back(rhs_expr);
-    curr_expr = muldiv_op;
-  }
-
-  return curr_expr;
-}
-
-AstNode *ClikeParser::ParseUnaryExpr(TokenIterator &p) {
-  if (kInc == p->symbol || kDec == p->symbol) {
-    // begin with ++/--
-    auto unary_op = ast_.CreateTerminal(move(*p));
-    ++p;
-
-    auto primary = ParsePrimaryExpr(p);
-    unary_op->push_child_back(primary);
-    return unary_op;
-
-  } else if (kAdd == p->symbol || kSub == p->symbol) {
-    // begin with +/-
-    auto head_op = ast_.CreateTerminal(move(*p));
-    ++p;
-
-    auto primary = ParsePrimaryExpr(p);
-    if (kInc == p->symbol || kDec == p->symbol) {
-      // end with ++/--
-      auto tail_op = ast_.CreateTerminal(move(*p));
-      ++p;
-      // push twice
-      tail_op->push_child_back(primary);
-      tail_op->push_child_back(primary);
-      head_op->push_child_back(tail_op);
-
-    } else {
-      // end with nothing
-      head_op->push_child_back(primary);
-    }
-    return head_op;
-
-  } else {
-    // priamry expr
-    auto primary = ParsePrimaryExpr(p);
-    if (kInc == p->symbol || kDec == p->symbol) {
-      auto tail_op = ast_.CreateTerminal(move(*p));
-      ++p;
-      // push twice
-      tail_op->push_child_back(primary);
-      tail_op->push_child_back(primary);
-      return tail_op;
-
-    } else {
-      return primary;
-    }
-  }
+  return expr;
 }
 
 AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
@@ -253,6 +152,153 @@ AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
   }
 }
 
+AstNode *ClikeParser::ParsePostfixExpr(TokenIterator &p) {
+  auto primary = ParsePrimaryExpr(p);
+
+  if (kInc == p->symbol || kDec == p->symbol) {
+    auto postfix_op = ast_.CreateTerminal(move(*p));
+    ++p;
+    postfix_op->push_child_back(primary);
+    return postfix_op;
+
+  } else {
+    return primary;
+  }
+}
+
+AstNode *ClikeParser::ParsePosNegExpr(TokenIterator &p) {
+  if (kAdd == p->symbol || kSub == p->symbol) {
+    auto posneg_op = ast_.CreateTerminal(move(*p));
+    ++p;
+    auto postfix = ParsePostfixExpr(p);
+    posneg_op->push_child_back(postfix);
+    return posneg_op;
+  } else {
+    return ParsePostfixExpr(p);
+  }
+}
+
+AstNode *ClikeParser::ParseMulDivExpr(TokenIterator &p) {
+  auto curr_expr = ParsePosNegExpr(p);
+
+  while (kMul == p->symbol || kDiv == p->symbol) {
+    auto muldiv_op = ast_.CreateTerminal(move(*p));
+    ++p;
+
+    auto rhs_expr = ParsePosNegExpr(p);
+    muldiv_op->push_child_back(curr_expr);
+    muldiv_op->push_child_back(rhs_expr);
+    curr_expr = muldiv_op;
+  }
+
+  return curr_expr;
+}
+
+AstNode *ClikeParser::ParseAddSubExpr(TokenIterator &p) {
+  auto curr_expr = ParseMulDivExpr(p);
+
+  while (kAdd == p->symbol || kSub == p->symbol) {
+    auto addsub_op = ast_.CreateTerminal(move(*p));
+    ++p;
+
+    auto rhs_expr = ParseMulDivExpr(p);
+    addsub_op->push_child_back(curr_expr);
+    addsub_op->push_child_back(rhs_expr);
+    curr_expr = addsub_op;
+  }
+
+  return curr_expr;
+}
+
+AstNode *ClikeParser::ParseCompareExpr(TokenIterator &p) {
+  auto curr_expr = ParseAddSubExpr(p);
+
+  while (kLE == p->symbol || kGE == p->symbol
+      || kLT == p->symbol || kGT == p->symbol) {
+    auto compare_op = ast_.CreateTerminal(move(*p));
+    ++p;
+
+    auto rhs_expr = ParseAddSubExpr(p);
+    compare_op->push_child_back(curr_expr);
+    compare_op->push_child_back(rhs_expr);
+    curr_expr = compare_op;
+  }
+
+  return curr_expr;
+}
+
+AstNode *ClikeParser::ParseEquationExpr(TokenIterator &p) {
+  auto curr_expr = ParseCompareExpr(p);
+
+  while (kNE == p->symbol || kEQ == p->symbol) {
+    auto equation_op = ast_.CreateTerminal(move(*p));
+    ++p;
+
+    auto rhs_expr = ParseCompareExpr(p);
+    equation_op->push_child_back(curr_expr);
+    equation_op->push_child_back(rhs_expr);
+    curr_expr = equation_op;
+  }
+
+  return curr_expr;
+}
+
+AstNode *ClikeParser::ParseAssignExpr(TokenIterator &p) {
+  std::stack<AstNode*> assign_stack;
+  auto first_expr = ParseEquationExpr(p);
+  assign_stack.push(first_expr);
+
+  while (kAssign == p->symbol) {
+    auto assign_op = ast_.CreateTerminal(move(*p));
+    assign_stack.push(assign_op);
+    ++p;
+
+    auto rhs_expr = ParseEquationExpr(p);
+    assign_stack.push(rhs_expr);
+  }
+
+  AstNode *curr_node = assign_stack.top();
+  assign_stack.pop();
+  while (!assign_stack.empty()) {
+    auto assign_op = assign_stack.top();
+    assign_stack.pop();
+    auto lhs_expr = assign_stack.top();
+    assign_stack.pop();
+    assign_op->push_child_back(lhs_expr);
+    assign_op->push_child_back(curr_node);
+    curr_node = assign_op;
+  }
+  return curr_node;
+}
+
+AstNode *ClikeParser::ParseCommaExpr(TokenIterator &p) {
+  auto curr_expr   = ParseAssignExpr(p);
+
+  while (kComma == p->symbol) {
+    auto comma_op = ast_.CreateTerminal(move(*p));
+    ++p;
+
+    auto rhs_expr = ParseAssignExpr(p);
+    comma_op->push_child_back(curr_expr);
+    comma_op->push_child_back(rhs_expr);
+    curr_expr = comma_op;
+  }
+
+  return curr_expr;
+}
+
+AstNode *ClikeParser::ParseExpr(TokenIterator &p) {
+  // return ParsePrimaryExpr(p);
+  // return ParsePostfixExpr(p);
+  // return ParsePosNegExpr(p);
+  // return ParseMulDivExpr(p);
+  // return ParseAddSubExpr(p);
+  // return ParseCompareExpr(p);
+  // return ParseEquationExpr(p);
+  // return ParseAssignExpr(p);
+  return ParseCommaExpr(p);
+}
+
 AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
   if (kPrintf != p->symbol) {
     logger.error("expect a printf {}", to_string(*p));
@@ -280,7 +326,7 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
   while (kIf == p->symbol) {
     auto clause = ast_.CreateIfClause(move(*p));
     ++p;
-    
+
     if (kLeftParen != p->symbol) {
       logger.error("expect a ( {}", to_string(*p));
       return nullptr;
@@ -318,7 +364,7 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
   return if_root;
 }
 
-AstNode* ClikeParser::ParseLine(TokenIterator &p) {
+AstNode *ClikeParser::ParseLine(TokenIterator &p) {
   return nullptr;
 }
 
@@ -326,7 +372,7 @@ AstNode *ClikeParser::ParseBlockBody(TokenIterator &p) {
   return nullptr;
 }
 
-AstNode* ClikeParser::ParseSubBlock(TokenIterator &p) {
+AstNode *ClikeParser::ParseSubBlock(TokenIterator &p) {
   if (kLeftBrace == p->symbol) {
     ++p;
 

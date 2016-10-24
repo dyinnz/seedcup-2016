@@ -13,24 +13,33 @@ class ClikeParser {
  public:
   Ast Parse(std::vector<Token> &tokens);
 
-  AstNode* ParseBlockBody(TokenIterator &p); // the block without {}
-  AstNode* ParseBraceBlock(TokenIterator &p); // the block with {}
-  AstNode* ParseLine(TokenIterator &p); // the block with {}
-  AstNode* ParseSubBlock(TokenIterator &p); // the block after if & for & while
+  AstNode *ParseBlockBody(TokenIterator &p); // the block without {}
+  AstNode *ParseBraceBlock(TokenIterator &p); // the block with {}
+  AstNode *ParseSubBlock(TokenIterator &p); // the block after if & for & while
+  AstNode *ParseLine(TokenIterator &p); // the block with {}
 
   AstNode *ParseTypeHead(TokenIterator &p); // int x, y = 1;
-  AstNode* ParseAssign(TokenIterator &p); // x = 1;
+  AstNode *ParsePrintf(TokenIterator &p);
+  AstNode *ParseExprStmt(TokenIterator &p); // any expr ending with ;
 
-  AstNode* ParseExpr(TokenIterator &p);
-  AstNode *ParseUnaryExpr(TokenIterator &p);
+  /**
+   * Expression
+   */
   AstNode *ParsePrimaryExpr(TokenIterator &p);
-  AstNode *ParseTermExpr(TokenIterator &p);
+  AstNode *ParsePostfixExpr(TokenIterator &p);
+  AstNode *ParsePosNegExpr(TokenIterator &p);
+  AstNode *ParseMulDivExpr(TokenIterator &p);
+  AstNode *ParseAddSubExpr(TokenIterator &p);
+  AstNode *ParseCompareExpr(TokenIterator &p);
+  AstNode *ParseEquationExpr(TokenIterator &p);
+  AstNode *ParseAssignExpr(TokenIterator &p);
+  AstNode *ParseCommaExpr(TokenIterator &p);
+  AstNode *ParseExpr(TokenIterator &p);
 
-  AstNode* ParsePrintf(TokenIterator &p);
-  AstNode* ParseIf(TokenIterator &p);
-  AstNode* ParseFor(TokenIterator &p);
-  AstNode* ParseWhile(TokenIterator &p);
-  AstNode* ParseDoWhile(TokenIterator &p);
+  AstNode *ParseIf(TokenIterator &p);
+  AstNode *ParseFor(TokenIterator &p);
+  AstNode *ParseWhile(TokenIterator &p);
+  AstNode *ParseDoWhile(TokenIterator &p);
 
  private:
   Ast ast_;
