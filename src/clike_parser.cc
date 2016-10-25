@@ -31,12 +31,13 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
     func_error(logger, "expect a type {}", to_string(*p));
     return nullptr;
   }
-  auto decl_node = ast_.CreateTypeHead(move(*p));
+  auto decl_node = ast_.CreateTerminal(move(*p));
   ++p;
 
   auto parse_decl_def = [&]() -> AstNode * {
     if (kIdentifier != p->symbol) {
       func_error(logger, "expect a identifier {}", to_string(*p));
+      return nullptr;
     }
     auto identifier = ast_.CreateTerminal(move(*p));
     ++p;
@@ -47,7 +48,7 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
 
     } else {
       // There is a definition
-      auto assign = ast_.CreateAssign(move(*p));
+      auto assign = ast_.CreateTerminal(move(*p));
       ++p;
 
       // only allow assign expr
@@ -62,7 +63,7 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
   // first declaration or definition
   auto sub_node = parse_decl_def();
   if (!sub_node) {
-    logger.log("expect a declaration or definition {}", to_string(*p));
+    func_log(logger, "expect a declaration or definition {}", to_string(*p));
     return nullptr;
   }
   decl_node->push_child_back(sub_node);
@@ -70,15 +71,15 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
   while (kSemicolon != p->symbol) {
     // skip ,
     if (kComma != p->symbol) {
-      logger.log("expect a , {}", to_string(*p));
+      func_log(logger, "expect a , {}", to_string(*p));
       continue;
     } else {
       ++p;
     }
 
     if (nullptr == (sub_node = parse_decl_def())) {
-      logger.log("expect a declaration or definition {}",
-                 to_string(*p));
+      func_log(logger, "expect a declaration or definition {}",
+               to_string(*p));
       return nullptr;
     }
     decl_node->push_child_back(sub_node);
@@ -96,7 +97,7 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
   }
   ++p;
 
-  auto printf = ast_.CreatePrintf(move(*p));
+  auto printf = ast_.CreateTerminal(move(*p));
 
   if (kLeftParen != p->symbol) {
     func_error(logger, "expect a ( {}", to_string(*p));
@@ -119,7 +120,7 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
   auto expr = ParseExpr(p);
   printf->push_child_back(expr);
 
-  if (kLeftParen != p->symbol) {
+  if (kRightParen != p->symbol) {
     func_error(logger, "expect a ) {}", to_string(*p));
     return nullptr;
   }
@@ -164,6 +165,7 @@ AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
     // begin with identifier & positive number
     if (kNumber != p->symbol && kIdentifier != p->symbol) {
       func_error(logger, "expect a number or identifier {}", to_string(*p));
+      ++p;
       return nullptr;
     }
     auto primary = ast_.CreateTerminal(move(*p));
@@ -368,7 +370,7 @@ AstNode *ClikeParser::ParseLineOrBlock(TokenIterator &p) {
 }
 
 AstNode *ClikeParser::ParseBlockBody(TokenIterator &p) {
-  auto block = ast_.CreateBlock(kBlock);
+  auto block = ast_.CreateNonTerminal(kBlock);
 
   while (true) {
     while (kLFSymbol == p->symbol) {
@@ -408,10 +410,10 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
     return nullptr;
   }
 
-  auto if_root = ast_.CreateIfRoot(kIfRoot);
+  auto if_root = ast_.CreateNonTerminal(kIfRoot);
 
   while (kIf == p->symbol) {
-    auto clause = ast_.CreateIfClause(move(*p));
+    auto clause = ast_.CreateTerminal(move(*p));
     ++p;
 
     if (kLeftParen != p->symbol) {
@@ -440,7 +442,7 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
       if (kIf == p->symbol) {
         // skip
       } else {
-        auto else_clause = ast_.CreateIfClause(move(*p));
+        auto else_clause = ast_.CreateTerminal(move(*p));
         auto else_body = ParseLineOrBlock(p);
         else_clause->push_child_back(else_body);
         if_root->push_child_back(else_clause);
@@ -456,7 +458,7 @@ AstNode *ClikeParser::ParseFor(TokenIterator &p) {
     func_error(logger, "expect a for {}", to_string(*p));
     return nullptr;
   }
-  auto for_node = ast_.CreateFor(move(*p));
+  auto for_node = ast_.CreateTerminal(move(*p));
   ++p;
 
   if (kLeftParen != p->symbol) {
@@ -507,7 +509,7 @@ AstNode *ClikeParser::ParseWhile(TokenIterator &p) {
     func_error(logger, "expect a while {}", to_string(*p));
     return nullptr;
   }
-  auto while_node = ast_.CreateWhile(move(*p));
+  auto while_node = ast_.CreateTerminal(move(*p));
   ++p;
 
   if (kLeftParen != p->symbol) {
@@ -536,7 +538,7 @@ AstNode *ClikeParser::ParseDoWhile(TokenIterator &p) {
     func_error(logger, "expect a do {}", to_string(*p));
     return nullptr;
   }
-  auto do_node = ast_.CreateDoWhile(move(*p));
+  auto do_node = ast_.CreateTerminal(move(*p));
   ++p;
 
   auto body = ParseBraceBlock(p);

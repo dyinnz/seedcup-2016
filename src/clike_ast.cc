@@ -7,10 +7,6 @@
 
 using namespace simple_logger;
 
-AstNode::~AstNode() {
-}
-
-
 void PrintAstNode(AstNode *node, int deep) {
   for (int i = 0; i < deep; ++i) {
     std::cout << "    ";

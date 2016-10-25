@@ -1,24 +1,24 @@
-// int x;
-// int x, y = 1, z=2;
-// x = -10 + hehe ;
-// printf("I have a pen. %d\n", pen);
-// x = a;
-// x = a++;
-// x = -a++;
-// x = -a++ * b;
-// x = -a++ * b - c;
-// x = 10 < -a++ * b - c;
-// x = 1 == 10 < -a++ * b - c;
-// x = hello = world = 1 == 10 < -a++ * b - c;
-// x = hello = world = 1 == 10 < -a++ * b - c, 999;
-// int x;
-// {
-// x = 1;
-// {
-// int y;
-// }
+int x;
+int x, y = 1, z=2;
+x = -10 + hehe ;
+printf("I have a pen. %d\n", pen);
+x = a;
+x = a++;
+x = -a++;
+x = -a++ * b;
+x = -a++ * b - c;
+x = 10 < -a++ * b - c;
+x = 1 == 10 < -a++ * b - c;
+x = hello = world = 1 == 10 < -a++ * b - c;
+x = hello = world = 1 == 10 < -a++ * b - c, 999;
+int x;
+{
+x = 1;
+{
+int y;
+}
 
-// }
+}
 
 // main() {
   int x = 5;
@@ -34,7 +34,7 @@
     x = x + i;
   }
 
-for (;---;) {
+for (;;) {
 x = x + 2;
 }
 
