@@ -41,6 +41,10 @@ class ClikeParser {
   AstNode *ParseWhile(TokenIterator &p);
   AstNode *ParseDoWhile(TokenIterator &p);
 
+  Ast TransferAst() {
+    return std::move(ast_);
+  }
+
  private:
   Ast ast_;
   std::vector<Token> tokens_;

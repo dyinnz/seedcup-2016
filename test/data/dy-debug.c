@@ -1,5 +1,8 @@
 int x;
 int x, y = 1, z=2;
+
+x = y + z;
+/*
 x = -10 + hehe ;
 printf("I have a pen. %d\n", pen);
 x = a;
@@ -42,4 +45,5 @@ do {
 break;
 while (x < 10) x--;
 } while (0);
+ */
 // }

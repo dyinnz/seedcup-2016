@@ -36,6 +36,22 @@ class AstNode {
     return children_;
   }
 
+  const Symbol &symbol() const {
+    return symbol_;
+  }
+
+  const std::string &str() const {
+    return str_;
+  }
+
+  size_t row() const {
+    return row_;
+  }
+
+  size_t column() const {
+    return column_;
+  }
+
  private:
   std::vector<AstNode *> children_;
   Symbol symbol_;

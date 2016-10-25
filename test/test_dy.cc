@@ -9,6 +9,7 @@
 #include "simplelogger.h"
 #include "clike_grammar.h"
 #include "clike_parser.h"
+#include "interpreter.h"
 
 using namespace std;
 using namespace simple_logger;
@@ -65,6 +66,9 @@ int main() {
 
   ClikeParser parser;
   parser.Parse(tokens);
+
+  Interpreter interpreter(parser.TransferAst());
+  interpreter.Exec();
 
   return 0;
 }

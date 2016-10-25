@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
 include_directories(include/)
 include_directories(src/)
 
-file(GLOB Sources ./src/*.cc)
+file(GLOB Sources ./src/*.cc ./src/*.cpp)
 
 add_executable(main ${Sources})
 
@@ -17,6 +17,8 @@ add_executable(test_dy
         src/regex_parser.cc
         src/tokenizer.cc
         src/clike_ast.cc
+		src/interpreter.cc
+		src/symbol_table.cpp
         test/test_dy.cc)
 
 add_executable(test_mem_manager
