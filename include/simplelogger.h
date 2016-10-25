@@ -16,7 +16,19 @@
 namespace simple_logger {
 
 #define func_debug(__logger, __format, ...) do { \
-  __logger.debug("%s() " __format, __func__, ##__VA_ARGS__); \
+  __logger.debug("L{}:{}() " __format, __LINE__, __func__, ##__VA_ARGS__); \
+} while (false);
+
+#define func_log(__logger, __format, ...) do { \
+  __logger.log("L{}:{}() " __format, __LINE__, __func__, ##__VA_ARGS__); \
+} while (false);
+
+#define func_notice(__logger, __format, ...) do { \
+  __logger.notice("L{}:{}() " __format, __LINE__, __func__, ##__VA_ARGS__); \
+} while (false);
+
+#define func_error(__logger, __format, ...) do { \
+  __logger.error("L{}:{}() " __format, __LINE__, __func__, ##__VA_ARGS__); \
 } while (false);
 
 /**

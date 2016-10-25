@@ -34,6 +34,10 @@
     x = x + i;
   }
 
+for (;---;) {
+x = x + 2;
+}
+
 do {
 break;
 while (x < 10) x--;
