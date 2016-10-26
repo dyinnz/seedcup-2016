@@ -52,5 +52,4 @@ add_executable(test_clike_parser
 # 		src/clike_grammar.cc)
 
 add_executable(test_hl
-		src/symbol_table.cpp
-		test/test_hl.cpp)
+        src/test_tool.cpp)
