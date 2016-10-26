@@ -38,6 +38,16 @@ int SymbolTable::GetInt(const std::string key) {
 }
 
 void SymbolTable::SetInt(const std::string key, const int val) {
+  size_t pos = tables.size() - (now_depth + 1);
+
+  for (auto iter = tables.rbegin() + pos; iter != tables.rend(); iter++) {
+    table_t &table = **iter;
+    if (table.find(key) != table.end()) {
+      table[key] = val;
+      return;
+    }
+  }
+
   table_t &table = *tables[now_depth];
   table[key] = val;
 }

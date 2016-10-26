@@ -18,7 +18,7 @@ BaseLogger logger;
 
 int main() {
   logger.set_log_level(kDebug);
-  GET_FILE_DATA_SAFELY(data, size, "/home/henrylee/project/cpp/2016-lingqian/test/data/loop_3.txt");
+  GET_FILE_DATA_SAFELY(data, size, "test/data/sample3.txt");
   logger.debug("\n{}", data);
 
   auto tokenizer = clike_grammar::BuilderClikeTokenizer();
@@ -37,6 +37,8 @@ int main() {
 
   Interpreter interpreter(parser.TransferAst());
   interpreter.Exec();
+
+  interpreter.OutputLines("output.txt");
 
   return 0;
 }

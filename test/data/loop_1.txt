@@ -1,0 +1,6 @@
+int i;
+for (;;) {
+break;
+i = 0;
+}
+

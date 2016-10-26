@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <stdlib.h>
+#include <string.h>
 #include <fstream>
 #include <unordered_set>
 #include "interpreter.h"
@@ -27,11 +28,6 @@ int Interpreter::ExecSingle(AstNode *node) {
     kNumber, kIdentifier, kComma
   };
 
-  if (last_line_ != node->row()) {
-    func_log(logger, "now running line {}: node {}", node->row(), node->to_string());
-    run_lines_.push_back(node->row());
-    last_line_ = node->row();
-  }
 
   if (expr_head.find(node->symbol()) != expr_head.end()) {
     return EvalExpr(node);
@@ -67,7 +63,9 @@ int Interpreter::ExecSingle(AstNode *node) {
 //  case kAssignID:result = ExecAssign(node);
 //    break;
 
-    case kBreakID:is_break_ = true;
+    case kBreakID:
+      is_break_ = true;
+      recordLine(node);
       break;
 
     case kIfID:
@@ -100,7 +98,6 @@ void Interpreter::ExecLoopBlock(AstNode *node) {
 }
 
 void Interpreter::ExecTypeHead(AstNode *node) {
-  bool count_line = false;
   for (auto child : node->children()) {
     if (kIdentifier == child->symbol()) {
       // ignore it
@@ -129,6 +126,7 @@ int Interpreter::ExecAssign(AstNode *node) {
 }
 
 int Interpreter::EvalExpr(AstNode *node) {
+  recordLine(node);
   switch (node->symbol().ID()) {
     case kNumberID:
       return atoi(node->str().c_str());
@@ -207,15 +205,22 @@ int Interpreter::EvalExpr(AstNode *node) {
       return result;
     }
 
+    case kStringID:
+      return strlen(node->symbol().str());
+
     default:func_error(logger, "illegal node: {}", node->to_string());
       return 0;
   }
 }
 
 int Interpreter::ExecPrintf(AstNode *node) {
+  auto result = strlen(node->children().front()->symbol().str());
+
   for (auto child : node->children()) {
     EvalExpr(child);
   }
+
+  return result;
 }
 
 void Interpreter::ExecIfRoot(AstNode *node) {
@@ -257,7 +262,7 @@ void Interpreter::ExecElseClause(AstNode *node) {
     return;
   }
 
-  ExecSingle(node);
+  ExecSingle(node->children().front());
 }
 
 void Interpreter::ExecFor(AstNode *node) {
@@ -270,6 +275,7 @@ void Interpreter::ExecFor(AstNode *node) {
   auto step = node->children().at(2);
   auto body = node->children().at(3);
 
+  recordLine(node);
   for (ExecSingle(init); ExecSingle(condition) || condition->symbol() == kSemicolon; ExecSingle(step)) {
     if (body->symbol() == kBlock) {
       ExecLoopBlock(body);
@@ -349,4 +355,12 @@ void Interpreter::OutputLines(const char *filename) {
       fout << run_lines_[i];
   }
   fout.close();
+}
+
+void Interpreter::recordLine(AstNode *node) {
+  if (last_line_ != node->row()) {
+    func_log(logger, "now running line {}: node {}", node->row(), node->to_string());
+    run_lines_.push_back(node->row());
+    last_line_ = node->row();
+  }
 }

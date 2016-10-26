@@ -1,0 +1,7 @@
+int a = 1;
+
+if (a++ == 2) {
+  printf("1");
+} else {
+  printf("0");
+}

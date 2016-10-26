@@ -41,4 +41,6 @@ class Interpreter {
 
   bool is_break_;
   int last_line_;
+
+  void recordLine(AstNode *node);
 };

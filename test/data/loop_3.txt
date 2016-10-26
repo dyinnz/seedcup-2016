@@ -1,0 +1,7 @@
+int i = 0;
+
+do {
+ int i = 1;
+ i++;
+ i = 2 / i;
+} while(i--);

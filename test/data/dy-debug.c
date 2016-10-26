@@ -39,6 +39,7 @@ int y;
 
 for (;;) {
 x = x + 2;
+break;
 }
 
 do {
