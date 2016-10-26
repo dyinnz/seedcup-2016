@@ -6,7 +6,6 @@
 #include "symbol_table.h"
 
 using namespace std;
-using namespace symbol_table;
 
 int main() {
   cout << "hello world" << endl;

@@ -13,25 +13,32 @@ class Interpreter {
   Interpreter(Ast &&ast) : ast_(std::move(ast)) {}
 
   void Exec();
-  void ExecSingle(AstNode *node);
+  int ExecSingle(AstNode *node);
   void ExecBlock(AstNode *node);
+  void ExecLoopBlock(AstNode *node);
 
   void ExecTypeHead(AstNode *node);
-  void ExecPrintf(AstNode *node);
+  int ExecPrintf(AstNode *node);
 
   void ExecIfRoot(AstNode *node);
-  void ExecIfClause(AstNode *node);
+  int ExecIfClause(AstNode *node);
   void ExecElseClause(AstNode *node);
 
   void ExecFor(AstNode *node);
   void ExecWhile(AstNode *node);
   void ExecDoWhile(AstNode *node);
 
-  void ExecAssign(AstNode *node);
+  int ExecAssign(AstNode *node);
   int EvalExpr(AstNode *node);
 
+  void OutputLines(const char *filename);
+
  private:
+
   Ast ast_;
   symbol_table::SymbolTable table_;
   std::vector<size_t> run_lines_;
+
+  bool is_break_;
+  int last_line_;
 };
