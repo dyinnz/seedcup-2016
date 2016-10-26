@@ -3,6 +3,7 @@
 //
 
 #include <iterator>
+#include <unordered_set>
 #include "simplelogger.h"
 #include "clike_grammar.h"
 #include "clike_parser.h"
@@ -25,16 +26,17 @@ Ast ClikeParser::Parse(std::vector<Token> &tokens) {
   return move(ast_);
 }
 
+/**
+ * @param p Token position
+ * @return  A node of declaration or definition
+ * @brief   E.g. int x = 1, y, z = 0;
+ *          Part 1: int
+ *          Part 2: first identifier or assignment: x = 1
+ *          Part 3: rest identifier or assignment: , y , z = 0
+ *          Part 4: ;
+ */
 AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
-  // type int
-  if (kInt != p->symbol) {
-    func_error(logger, "expect a type {}", to_string(*p));
-    return nullptr;
-  }
-  auto decl_node = ast_.CreateTerminal(move(*p));
-  ++p;
-
-  auto parse_decl_def = [&]() -> AstNode * {
+  auto parse_decl_def = [this](TokenIterator &p) -> AstNode * {
     if (kIdentifier != p->symbol) {
       func_error(logger, "expect a identifier {}", to_string(*p));
       return nullptr;
@@ -60,24 +62,32 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
     }
   };
 
-  // first declaration or definition
-  auto sub_node = parse_decl_def();
+  // Part 1: int
+  if (kInt != p->symbol) {
+    func_error(logger, "expect a type {}", to_string(*p));
+    return nullptr;
+  }
+  auto decl_node = ast_.CreateTerminal(move(*p));
+  ++p;
+
+  // Part 2: first declaration or definition
+  auto sub_node = parse_decl_def(p);
   if (!sub_node) {
     func_log(logger, "expect a declaration or definition {}", to_string(*p));
     return nullptr;
   }
   decl_node->push_child_back(sub_node);
 
+  // Part 3: rest declaration or definition
   while (kSemicolon != p->symbol) {
     // skip ,
     if (kComma != p->symbol) {
       func_log(logger, "expect a , {}", to_string(*p));
-      continue;
-    } else {
-      ++p;
+      return nullptr;
     }
+    ++p;
 
-    if (nullptr == (sub_node = parse_decl_def())) {
+    if (nullptr == (sub_node = parse_decl_def(p))) {
       func_log(logger, "expect a declaration or definition {}",
                to_string(*p));
       return nullptr;
@@ -85,12 +95,23 @@ AstNode *ClikeParser::ParseTypeHead(TokenIterator &p) {
     decl_node->push_child_back(sub_node);
   }
 
-  // skip ;
+  // Part 4: skip ;
   ++p;
   return decl_node;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of printf statement
+ * @brief   E.g. printf("hello world %d", expr);
+ *          Part 1: printf (
+ *          Part 2: "hello world"
+ *          Part 3: , expr or epsilon
+ *          Part 4: );
+ */
 AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
+  // TODO: there are some corner cases
+  // Part 1: printf (
   if (kPrintf != p->symbol) {
     func_error(logger, "expect a printf {}", to_string(*p));
     return nullptr;
@@ -104,30 +125,36 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
   }
   ++p;
 
+  // Part 2: a string
   if (kString != p->symbol) {
     func_error(logger, "expect a string {}", to_string(*p));
     return nullptr;
   }
+  auto str = ast_.CreateTerminal(move(*p));
   ++p;
+  printf->push_child_back(str);
 
-  if (kRightParen == p->symbol) {
-    ++p;
-  } else if (kComma == p->symbol) {
-    ++p;
+  if (kComma == p->symbol) {
+    // Part 3: , expr
+    ++p; // skip the first comma
 
     auto expr = ParseExpr(p);
     printf->push_child_back(expr);
 
-    if (kRightParen != p->symbol) {
-      func_error(logger, "expect a ) {}", to_string(*p));
-      return nullptr;
-    }
-    ++p;
+  } else if (kRightParen == p->symbol) {
+    // Part 4: epsilon, do nothing
   } else {
     func_error(logger, "expect a , or ) {}", to_string(*p));
     return nullptr;
+
   }
 
+  // Part 4: );
+  if (kRightParen != p->symbol) {
+    func_error(logger, "expect a ) {}", to_string(*p));
+    return nullptr;
+  }
+  ++p;
   if (kSemicolon != p->symbol) {
     func_error(logger, "expect a ; {}", to_string(*p));
     return nullptr;
@@ -137,16 +164,34 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
   return printf;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expression statement
+ * @brief   ExprStmt -> PrintfStmt | Expr ";"
+ */
 AstNode *ClikeParser::ParseExprStmt(TokenIterator &p) {
-  auto expr = ParseExpr(p);
-  if (kSemicolon != p->symbol) {
-    func_error(logger, "expect a ; {}", to_string(*p));
-    return nullptr;
+  AstNode *expr = nullptr;
+  if (kPrintf == p->symbol) {
+    expr = ParsePrintf(p);
+  } else {
+    expr = ParseExpr(p);
+    if (kSemicolon != p->symbol) {
+      func_error(logger, "expect a ; {}", to_string(*p));
+      return nullptr;
+    }
+    ++p;
   }
-  ++p;
+
   return expr;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expresssion that may suffix with + -
+ * @brief   E.g. this_is_a_var
+ *               999
+ *               ( a + b )
+ */
 AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
   if (kLeftParen == p->symbol) {
     // begin with (
@@ -177,32 +222,52 @@ AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
   }
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expresssion that may suffix with + -
+ * @brief   E.g. +a, -100
+ */
 AstNode *ClikeParser::ParsePostfixExpr(TokenIterator &p) {
   auto primary = ParsePrimaryExpr(p);
 
   if (kInc == p->symbol || kDec == p->symbol) {
+    // postfix with ++ --
     auto postfix_op = ast_.CreateTerminal(move(*p));
     ++p;
     postfix_op->push_child_back(primary);
     return postfix_op;
 
   } else {
+    // no postfix
     return primary;
   }
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expresssion that may suffix with + -
+ * @brief   E.g. +a, -100
+ */
 AstNode *ClikeParser::ParsePosNegExpr(TokenIterator &p) {
   if (kAdd == p->symbol || kSub == p->symbol) {
+    // suffix with + -
     auto posneg_op = ast_.CreateTerminal(move(*p));
     ++p;
     auto postfix = ParsePostfixExpr(p);
     posneg_op->push_child_back(postfix);
     return posneg_op;
+
   } else {
+    // no suffix
     return ParsePostfixExpr(p);
   }
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expresssion that may contain * /
+ * @brief   E.g. a * b / c
+ */
 AstNode *ClikeParser::ParseMulDivExpr(TokenIterator &p) {
   auto curr_expr = ParsePosNegExpr(p);
 
@@ -219,6 +284,11 @@ AstNode *ClikeParser::ParseMulDivExpr(TokenIterator &p) {
   return curr_expr;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expresssion that may contain + -
+ * @brief   E.g. a + b - c
+ */
 AstNode *ClikeParser::ParseAddSubExpr(TokenIterator &p) {
   auto curr_expr = ParseMulDivExpr(p);
 
@@ -235,6 +305,11 @@ AstNode *ClikeParser::ParseAddSubExpr(TokenIterator &p) {
   return curr_expr;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expresssion that may contain comparation
+ * @brief   E.g. a < b >= c
+ */
 AstNode *ClikeParser::ParseCompareExpr(TokenIterator &p) {
   auto curr_expr = ParseAddSubExpr(p);
 
@@ -252,6 +327,11 @@ AstNode *ClikeParser::ParseCompareExpr(TokenIterator &p) {
   return curr_expr;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expresssion that may contain == !=
+ * @brief   E.g. a == b != c
+ */
 AstNode *ClikeParser::ParseEquationExpr(TokenIterator &p) {
   auto curr_expr = ParseCompareExpr(p);
 
@@ -268,11 +348,18 @@ AstNode *ClikeParser::ParseEquationExpr(TokenIterator &p) {
   return curr_expr;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expression that may contain assignment
+ * @brief   E.g. a = b = c
+ */
 AstNode *ClikeParser::ParseAssignExpr(TokenIterator &p) {
   std::stack<AstNode *> assign_stack;
+  // First: expr
   auto first_expr = ParseEquationExpr(p);
   assign_stack.push(first_expr);
 
+  // Rest: , expr ...
   while (kAssign == p->symbol) {
     auto assign_op = ast_.CreateTerminal(move(*p));
     assign_stack.push(assign_op);
@@ -282,6 +369,7 @@ AstNode *ClikeParser::ParseAssignExpr(TokenIterator &p) {
     assign_stack.push(rhs_expr);
   }
 
+  // Pop from stack
   AstNode *curr_node = assign_stack.top();
   assign_stack.pop();
   while (!assign_stack.empty()) {
@@ -289,6 +377,7 @@ AstNode *ClikeParser::ParseAssignExpr(TokenIterator &p) {
     assign_stack.pop();
     auto lhs_expr = assign_stack.top();
     assign_stack.pop();
+
     assign_op->push_child_back(lhs_expr);
     assign_op->push_child_back(curr_node);
     curr_node = assign_op;
@@ -296,6 +385,11 @@ AstNode *ClikeParser::ParseAssignExpr(TokenIterator &p) {
   return curr_node;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expression that may contain comma
+ * @brief   E.g. expr1, expr2, expr3
+ */
 AstNode *ClikeParser::ParseCommaExpr(TokenIterator &p) {
   auto curr_expr = ParseAssignExpr(p);
 
@@ -312,6 +406,11 @@ AstNode *ClikeParser::ParseCommaExpr(TokenIterator &p) {
   return curr_expr;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of expression
+ * @brief   There has 8 level of precedence
+ */
 AstNode *ClikeParser::ParseExpr(TokenIterator &p) {
   // return ParsePrimaryExpr(p);
   // return ParsePostfixExpr(p);
@@ -321,17 +420,24 @@ AstNode *ClikeParser::ParseExpr(TokenIterator &p) {
   // return ParseCompareExpr(p);
   // return ParseEquationExpr(p);
   // return ParseAssignExpr(p);
+
+  // check the first token
+  static std::unordered_set<Symbol> expr_firsts{
+      kAdd, kSub, kLeftParen, kIdentifier, kNumber,
+  };
+  if (expr_firsts.end() == expr_firsts.find(p->symbol)) {
+    func_notice(logger, "expect +, -, (, id, number {}", to_string(*p));
+  }
   return ParseCommaExpr(p);
 }
 
-AstNode *ClikeParser::ParseLine(TokenIterator &p) {
-  if (kInt == p->symbol) {
-    return ParseTypeHead(p);
-  } else if (kPrintf == p->symbol) {
-    return ParsePrintf(p);
-  } else if (kSemicolon == p->symbol) {
-    return ast_.CreateTerminal(move(*p++));
-  } else if (kBreak == p->symbol) {
+/**
+ * @param p Token position
+ * @return  A node of a single statement
+ * @brief   Parsing single statement
+ */
+AstNode *ClikeParser::ParseSingleStmt(TokenIterator &p) {
+  auto parse_break = [this](TokenIterator &p) -> AstNode * {
     auto break_node = ast_.CreateTerminal(move(*p));
     ++p;
     if (kSemicolon != p->symbol) {
@@ -340,8 +446,27 @@ AstNode *ClikeParser::ParseLine(TokenIterator &p) {
     }
     ++p;
     return break_node;
-  } else {
-    return ParseExprStmt(p);
+  };
+
+  switch (p->symbol.ID()) {
+    case kIntID:
+      return ParseTypeHead(p);
+    case kSemicolonID:
+      return ast_.CreateTerminal(move(*p++));
+    case kBreakID:
+      return parse_break(p);
+    case kDoID:
+      return ParseDoWhile(p);
+    case kWhileID:
+      return ParseWhile(p);
+    case kForID:
+      return ParseFor(p);
+    case kIfID:
+      return ParseIf(p);
+    case kLeftBraceID:
+      return ParseBraceBlock(p);
+    default:
+      return ParseExprStmt(p);
   }
 }
 
@@ -363,58 +488,31 @@ AstNode *ClikeParser::ParseBraceBlock(TokenIterator &p) {
   return block;
 }
 
-AstNode *ClikeParser::ParseLineOrBlock(TokenIterator &p) {
-  if (kLeftBrace == p->symbol) {
-    return ParseBraceBlock(p);
-  } else {
-    return ParseLine(p);
-  }
-}
-
 AstNode *ClikeParser::ParseBlockBody(TokenIterator &p) {
   auto block = ast_.CreateNonTerminal(kBlock);
 
   while (true) {
+    // check whether there are some LFs
     while (kLFSymbol == p->symbol) {
+      func_notice(logger, "unexpected LF {}", to_string(*p));
       ++p;
     }
     if (kEofSymbol == p->symbol || kRightBrace == p->symbol) {
       break;
     }
-
-    if (kDo == p->symbol) {
-      auto do_node = ParseDoWhile(p);
-      block->push_child_back(do_node);
-    } else if (kWhile == p->symbol) {
-      auto while_node = ParseWhile(p);
-      block->push_child_back(while_node);
-    } else if (kFor == p->symbol) {
-      auto for_node = ParseFor(p);
-      block->push_child_back(for_node);
-    } else if (kIf == p->symbol) {
-      auto if_node = ParseIf(p);
-      block->push_child_back(if_node);
-    } else if (kLeftBrace == p->symbol) {
-      auto brace = ParseBraceBlock(p);
-      block->push_child_back(brace);
-    } else {
-      auto line = ParseLine(p);
-      block->push_child_back(line);
-    }
+    block->push_child_back(ParseSingleStmt(p));
   }
 
   return block;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of if-root
+ */
 AstNode *ClikeParser::ParseIf(TokenIterator &p) {
-  if (kIf != p->symbol) {
-    func_error(logger, "expect a if {}", to_string(*p));
-    return nullptr;
-  }
-
-  auto if_root = ast_.CreateNonTerminal(kIfRoot);
-
-  while (kIf == p->symbol) {
+  auto parse_if_clause = [this](TokenIterator &p) -> AstNode* {
+    // if token
     auto clause = ast_.CreateTerminal(move(*p));
     ++p;
 
@@ -424,6 +522,7 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
     }
     ++p;
 
+    // Condition expression
     auto head = ParseExpr(p);
 
     if (kRightParen != p->symbol) {
@@ -432,29 +531,50 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
     }
     ++p;
 
-    auto body = ParseLineOrBlock(p);
+    // Executable body
+    auto body = ParseSingleStmt(p);
 
     clause->push_child_back(head);
     clause->push_child_back(body);
+  };
 
+  // check
+  if (kIf != p->symbol) {
+    func_error(logger, "expect a if {}", to_string(*p));
+    return nullptr;
+  }
+
+  auto if_root = ast_.CreateNonTerminal(kIfRoot);
+
+  while (kIf == p->symbol) {
+    auto clause = parse_if_clause(p);
     if_root->push_child_back(clause);
 
     if (kElse == p->symbol) {
-      ++p;
-      if (kIf == p->symbol) {
-        // skip
+      if (kIf == next(p)->symbol) {
+        // skip else
+        ++p;
       } else {
         auto else_clause = ast_.CreateTerminal(move(*p));
-        auto else_body = ParseLineOrBlock(p);
+        ++p;
+
+        auto else_body = ParseSingleStmt(p);
         else_clause->push_child_back(else_body);
         if_root->push_child_back(else_clause);
         break;
       }
+    } else {
+      // the next token does not belong to if
+      break;
     }
   }
   return if_root;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of for
+ */
 AstNode *ClikeParser::ParseFor(TokenIterator &p) {
   if (kFor != p->symbol) {
     func_error(logger, "expect a for {}", to_string(*p));
@@ -469,13 +589,16 @@ AstNode *ClikeParser::ParseFor(TokenIterator &p) {
   }
   ++p;
 
-  auto init = ParseLine(p);
+  // TODO: handle too many cases
+  auto init = ParseSingleStmt(p);
 
   AstNode *condition = nullptr;
   if (kSemicolon == p->symbol) {
+    // empty condition
     condition = ast_.CreateTerminal(Token(*p));
     ++p;
   } else {
+    // expression condition
     condition = ParseExpr(p);
     if (kSemicolon != p->symbol) {
       func_error(logger, "expect a ; {}", to_string(*p));
@@ -497,7 +620,7 @@ AstNode *ClikeParser::ParseFor(TokenIterator &p) {
   }
   ++p;
 
-  auto body = ParseLineOrBlock(p);
+  auto body = ParseSingleStmt(p);
 
   for_node->push_child_back(init);
   for_node->push_child_back(condition);
@@ -528,7 +651,7 @@ AstNode *ClikeParser::ParseWhile(TokenIterator &p) {
   }
   ++p;
 
-  auto body = ParseLineOrBlock(p);
+  auto body = ParseSingleStmt(p);
 
   while_node->push_child_back(condition);
   while_node->push_child_back(body);
