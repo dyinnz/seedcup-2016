@@ -8,7 +8,7 @@
 using namespace symbol_table;
 using namespace std;
 
-SymbolTable::SymbolTable() {
+SymbolTable::SymbolTable() : now_depth(0) {
   tables.push_back(new table_t);
 }
 
@@ -24,7 +24,9 @@ SymbolTable::~SymbolTable() {
 int SymbolTable::GetInt(const std::string key) {
   int result = 0;
 
-  for (auto iter = tables.rbegin(); iter != tables.rend(); iter++) {
+  size_t pos = tables.size() - (now_depth + 1);
+
+  for (auto iter = tables.rbegin() + pos; iter != tables.rend(); iter++) {
     table_t &table = **iter;
     if (table.find(key) != table.end()) {
       result = table[key];
@@ -36,12 +38,15 @@ int SymbolTable::GetInt(const std::string key) {
 }
 
 void SymbolTable::SetInt(const std::string key, const int val) {
-  table_t &table = *tables.back();
+  table_t &table = *tables[now_depth];
   table[key] = val;
 }
 
 void SymbolTable::PushLevel() {
   tables.push_back(new table_t);
+  if (now_depth == tables.size() - 2) {
+    now_depth = tables.size() - 1;
+  }
 }
 
 void SymbolTable::PopLevel() {
@@ -51,6 +56,32 @@ void SymbolTable::PopLevel() {
 
   delete tables.back();
   tables.pop_back();
+  if (now_depth == tables.size()) {
+    now_depth = tables.size() - 1;
+  }
+}
+
+void SymbolTable::EnterLevel() {
+  if (now_depth + 1 == tables.size()) {
+    tables.push_back(new table_t);
+  }
+
+  now_depth++;
+}
+
+void SymbolTable::LeaveLevel() {
+  if (!now_depth) {
+    return;
+  }
+
+  now_depth--;
+}
+
+void SymbolTable::PopToNowLevel() {
+  while (now_depth < tables.size() - 1) {
+    delete tables.back();
+    tables.pop_back();
+  }
 }
 
 size_t SymbolTable::GetDepth() {

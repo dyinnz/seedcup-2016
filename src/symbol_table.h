@@ -24,6 +24,11 @@ namespace symbol_table {
     void PushLevel();
     void PopLevel();
 
+    void EnterLevel();
+    void LeaveLevel();
+
+    void PopToNowLevel();
+
     std::size_t GetDepth();
     void Print();
 
@@ -32,6 +37,7 @@ namespace symbol_table {
 
   private:
     std::vector<table_t*> tables;
+    std::size_t  now_depth;
   };
 
 }
