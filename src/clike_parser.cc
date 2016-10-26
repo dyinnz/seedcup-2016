@@ -536,6 +536,7 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
 
     clause->push_child_back(head);
     clause->push_child_back(body);
+    return clause;
   };
 
   // check
