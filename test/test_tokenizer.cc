@@ -72,12 +72,12 @@ TEST_CASE("Lexical analyse") {
   REQUIRE(tokens[4].symbol == kNumber);
   REQUIRE(tokens[5].symbol == kWord);
 
-  REQUIRE(tokens[0].row == 0);
-  REQUIRE(tokens[1].row == 0);
-  REQUIRE(tokens[2].row == 0);
-  REQUIRE(tokens[3].row == 0);
-  REQUIRE(tokens[4].row == 2);
-  REQUIRE(tokens[5].row == 2);
+  REQUIRE(tokens[0].row == 1);
+  REQUIRE(tokens[1].row == 1);
+  REQUIRE(tokens[2].row == 1);
+  REQUIRE(tokens[3].row == 1);
+  REQUIRE(tokens[4].row == 3);
+  REQUIRE(tokens[5].row == 3);
 
   REQUIRE(tokens[0].column == 0);
   REQUIRE(tokens[1].column == 3);
