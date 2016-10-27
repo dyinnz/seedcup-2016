@@ -50,6 +50,3 @@ add_executable(test_clike_parser
 #         src/regex_parser.cc
 #         src/tokenizer.cc
 # 		src/clike_grammar.cc)
-
-add_executable(test_hl
-        src/test_tool.cpp)
