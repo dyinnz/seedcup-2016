@@ -82,6 +82,10 @@ void Interpreter::ExecBlock(AstNode *node) {
   table_.PushLevel();
   for (auto child : node->children()) {
     ExecSingle(child);
+    // TODO: check this twice
+    if (is_break_) {
+      return;
+    }
   }
   table_.PopLevel();
 }
@@ -117,8 +121,8 @@ void Interpreter::ExecTypeHead(AstNode *node) {
   }
 }
 
+// TODO: Delete this function?
 int Interpreter::ExecAssign(AstNode *node) {
-  // TODO: need recording line no
   int result = EvalExpr(node);
   auto name = node->children().front()->str();
   func_debug(logger, "name: {}, value: {}", name, table_.GetInt(name));
@@ -206,6 +210,7 @@ int Interpreter::EvalExpr(AstNode *node) {
     }
 
     case kStringID:
+      // TODO: should return true always
       return strlen(node->symbol().str());
 
     default:func_error(logger, "illegal node: {}", node->to_string());
@@ -216,6 +221,9 @@ int Interpreter::EvalExpr(AstNode *node) {
 int Interpreter::ExecPrintf(AstNode *node) {
   auto result = strlen(node->children().front()->symbol().str());
 
+  // TODO: I have added next line for
+  // that there is no expression in the node of Printf
+  recordLine(node);
   for (auto child : node->children()) {
     EvalExpr(child);
   }

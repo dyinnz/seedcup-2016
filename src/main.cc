@@ -4,6 +4,8 @@
 
 #include "simplelogger.h"
 #include "clike_grammar.h"
+#include "clike_parser.h"
+#include "interpreter.h"
 
 using namespace std;
 using namespace simple_logger;
@@ -42,20 +44,35 @@ size_t size = 0; \
 const char *name = ReadFileData((relative_path), (size)); \
 ScopeGuard [&] { delete[] name; };
 
+static const char *kInputFilename = "input.txt";
+static const char *kOutputFilename = "output.txt";
 
 int main() {
-  GET_FILE_DATA_SAFELY(data, size, "test/data/sample1.txt");
+  GET_FILE_DATA_SAFELY(data, size, kInputFilename);
+  logger.set_log_level(kDebug);
 
-  cout << "hello world" << endl;
-  cout << data << endl;
+  logger.debug("\n{}", data);
 
+  // split source string to tokens
   auto tokenizer = clike_grammar::BuilderClikeTokenizer();
   vector<Token> tokens;
   auto result = tokenizer.LexicalAnalyze(data, data+size, tokens);
+  if (!result) {
+    return -1;
+  }
 
   for (auto &t : tokens) {
-    cout << to_string(t) << endl;
+    logger.debug("{}", to_string(t));
   }
+
+  // syntax analysis
+  ClikeParser parser;
+  auto ast = parser.Parse(tokens);
+
+  // interpret ast
+  Interpreter interpreter(std::move(ast));
+  interpreter.Exec();
+  interpreter.OutputLines(kOutputFilename);
 
   return 0;
 }
