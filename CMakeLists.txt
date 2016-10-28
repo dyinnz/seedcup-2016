@@ -17,8 +17,8 @@ add_executable(test_dy
         src/regex_parser.cc
         src/tokenizer.cc
         src/clike_ast.cc
-		src/interpreter.cc
-		src/symbol_table.cpp
+        src/interpreter.cc
+        src/symbol_table.cpp
         test/test_dy.cc)
 
 add_executable(test_mem_manager
@@ -44,9 +44,3 @@ add_executable(test_clike_parser
         src/clike_ast.cc
         test/test_clike_parser.cc)
 
-# add_executable(test_clang
-#         test/test_clang.cc
-#         src/finite_automaton.cc
-#         src/regex_parser.cc
-#         src/tokenizer.cc
-# 		src/clike_grammar.cc)
