@@ -406,7 +406,7 @@ void Interpreter::ExecDoWhile(AstNode *node) {
  */
 void Interpreter::OutputLines(const char *filename) {
   std::ofstream fout(filename);
-  for (int i = 0; i < run_lines_.size(); ++i) {
+  for (size_t i = 0; i < run_lines_.size(); ++i) {
     if (i != run_lines_.size() - 1)
       fout << run_lines_[i] << " ";
     else
