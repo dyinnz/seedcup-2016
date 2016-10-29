@@ -98,7 +98,7 @@ Tokenizer BuilderClikeTokenizer() {
           {">", kGT},
           // ID & literal
           {R"(\d+)", kNumber},
-          {R"("[^"]*")", kString},
+          {R"("([^"]|\\")*")", kString},
           {R"(\w(\w|\d)*)", kIdentifier},
       }
   );
