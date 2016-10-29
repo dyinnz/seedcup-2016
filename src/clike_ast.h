@@ -62,6 +62,12 @@ class AstNode {
 
 class Ast {
  public:
+  ~Ast() {
+    for (auto node : node_manager_) {
+      delete node;
+    }
+  }
+
   AstNode *CreateTerminal(Token &&token) {
     auto p = new AstNode(std::move(token));
     node_manager_.push_back(p);
