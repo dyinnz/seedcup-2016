@@ -21,6 +21,11 @@ SymbolTable::~SymbolTable() {
 
 }
 
+/**
+ * @param key var's name
+ * @return  var's value
+ * @brief  Get a var from symbol table. Search top level firstly, if not found, search secound level.
+ */
 int SymbolTable::GetInt(const std::string key) {
   int result = 0;
 
@@ -37,6 +42,12 @@ int SymbolTable::GetInt(const std::string key) {
   return result;
 }
 
+/**
+ * @param key var's name
+ * @param val var's value
+ * @brief  Set a var from symbol table. Search now level firstly, if not found, search lower level.
+ *         If can't found it in whole table, then set a new var at the now level
+ */
 void SymbolTable::SetInt(const std::string key, const int val) {
   size_t pos = tables.size() - (now_depth + 1);
 
@@ -52,6 +63,9 @@ void SymbolTable::SetInt(const std::string key, const int val) {
   table[key] = val;
 }
 
+/**
+ * @brief  Set a new level
+ */
 void SymbolTable::PushLevel() {
   tables.push_back(new table_t);
   if (now_depth == tables.size() - 2) {
@@ -59,6 +73,9 @@ void SymbolTable::PushLevel() {
   }
 }
 
+/**
+ * @brief  Destroy the top level
+ */
 void SymbolTable::PopLevel() {
   if (tables.size() == 1) {
     return;
@@ -71,6 +88,9 @@ void SymbolTable::PopLevel() {
   }
 }
 
+/**
+ * @brief  Point to a higher level. If now level is the highest, then set a new one and point to it.
+ */
 void SymbolTable::EnterLevel() {
   if (now_depth + 1 == tables.size()) {
     tables.push_back(new table_t);
@@ -79,6 +99,9 @@ void SymbolTable::EnterLevel() {
   now_depth++;
 }
 
+/**
+ * @brief  Point to a lower level.
+ */
 void SymbolTable::LeaveLevel() {
   if (!now_depth) {
     return;
@@ -87,30 +110,12 @@ void SymbolTable::LeaveLevel() {
   now_depth--;
 }
 
+/**
+ * @brief  Destroy all level which higher than now level.
+ */
 void SymbolTable::PopToNowLevel() {
   while (now_depth < tables.size() - 1) {
     delete tables.back();
     tables.pop_back();
-  }
-}
-
-size_t SymbolTable::GetDepth() {
-  return tables.size();
-}
-
-void SymbolTable::Print() {
-  cout << __func__ << "(): " << endl;
-  int depth = 0;
-  for (auto table_iter = tables.begin(); table_iter != tables.end(); table_iter++) {
-    table_t &table = **table_iter;
-
-    for (auto iter = table.begin(); iter != table.end(); iter++) {
-      for (int i = 0; i < depth; i++) {
-        cout << "--";
-      }
-      cout << iter->first << ": " << iter->second << endl;
-    }
-
-    depth++;
   }
 }
