@@ -1,3 +1,6 @@
+printf("hello \" world");
+
+/*
 int x;
 int x, y = 1, z=2;
 
@@ -47,3 +50,4 @@ break;
 while (x < 10) x--;
 } while (0);
 // }
+ */

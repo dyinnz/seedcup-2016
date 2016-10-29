@@ -1,0 +1,15 @@
+int pen;
+int apple;
+int apple_pen;
+
+pen = 1;
+apple = 2;
+apple_pen = apple + pen;
+
+int pineapple = 4;
+int pineapple_pen = pineapple + pen;
+
+printf("I have a pen. %d\n", pen);
+printf("I have an apple. %d\n", apple);
+/* PPAP */
+printf("Pen-pineapple-apple pen.\n");
