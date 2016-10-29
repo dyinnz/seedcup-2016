@@ -84,7 +84,7 @@ void Interpreter::ExecBlock(AstNode *node) {
     ExecSingle(child);
     // TODO: check this twice
     if (is_break_) {
-      return;
+      break;
     }
   }
   table_.PopLevel();
@@ -95,7 +95,7 @@ void Interpreter::ExecLoopBlock(AstNode *node) {
   for (auto child : node->children()) {
     ExecSingle(child);
     if (is_break_) {
-      return;
+      break;
     }
   }
   table_.LeaveLevel();
@@ -122,12 +122,12 @@ void Interpreter::ExecTypeHead(AstNode *node) {
 }
 
 // TODO: Delete this function?
-int Interpreter::ExecAssign(AstNode *node) {
-  int result = EvalExpr(node);
-  auto name = node->children().front()->str();
-  func_debug(logger, "name: {}, value: {}", name, table_.GetInt(name));
-  return result;
-}
+//int Interpreter::ExecAssign(AstNode *node) {
+//  int result = EvalExpr(node);
+//  auto name = node->children().front()->str();
+//  func_debug(logger, "name: {}, value: {}", name, table_.GetInt(name));
+//  return result;
+//}
 
 int Interpreter::EvalExpr(AstNode *node) {
   recordLine(node);
@@ -210,8 +210,7 @@ int Interpreter::EvalExpr(AstNode *node) {
     }
 
     case kStringID:
-      // TODO: should return true always
-      return strlen(node->symbol().str());
+      return 1;
 
     default:func_error(logger, "illegal node: {}", node->to_string());
       return 0;

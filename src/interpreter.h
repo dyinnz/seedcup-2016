@@ -28,7 +28,7 @@ class Interpreter {
   void ExecWhile(AstNode *node);
   void ExecDoWhile(AstNode *node);
 
-  int ExecAssign(AstNode *node);
+//int ExecAssign(AstNode *node);
   int EvalExpr(AstNode *node);
 
   void OutputLines(const char *filename);
