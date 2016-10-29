@@ -28,7 +28,6 @@ class Interpreter {
   void ExecWhile(AstNode *node);
   void ExecDoWhile(AstNode *node);
 
-//int ExecAssign(AstNode *node);
   int EvalExpr(AstNode *node);
 
   void OutputLines(const char *filename);
@@ -40,7 +39,7 @@ class Interpreter {
   std::vector<size_t> run_lines_;
 
   bool is_break_;
-  int last_line_;
+  std::size_t last_line_;
 
   void recordLine(AstNode *node);
 };

@@ -29,9 +29,6 @@ namespace symbol_table {
 
     void PopToNowLevel();
 
-    std::size_t GetDepth();
-    void Print();
-
   public:
     typedef std::unordered_map<std::string, int> table_t;
 
