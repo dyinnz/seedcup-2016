@@ -113,7 +113,7 @@ class Ast {
    */
   ~Ast() {
     for (auto node : node_manager_) {
-      delete node;
+      // delete node;
     }
     node_manager_.clear();
   }
