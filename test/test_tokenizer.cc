@@ -18,7 +18,8 @@ using std::vector;
 BaseLogger logger;
 
 #define DEF_TEST_TERMINAL(name, offset) \
-static const Symbol name(Symbol::kTerminal, kStartID + (offset));
+const char *_##name() { return __func__; }\
+const Symbol name(Symbol::kTerminal, kStartID + (offset), _##name() + 2);
 
 /*----------------------------------------------------------------------------*/
 

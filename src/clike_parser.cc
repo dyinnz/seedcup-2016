@@ -162,11 +162,6 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
     return nullptr;
   }
   ++p;
-  if (kSemicolon != p->symbol) {
-    func_error(logger, "expect a ; {}", to_string(*p));
-    return nullptr;
-  }
-  ++p;
 
   return printf;
 }
@@ -177,19 +172,12 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
  * @brief   ExprStmt -> PrintfStmt | Expr ";"
  */
 AstNode *ClikeParser::ParseExprStmt(TokenIterator &p) {
-  // TODO: move Printf Expr to Primary Expr
-  AstNode *expr = nullptr;
-  if (kPrintf == p->symbol) {
-    expr = ParsePrintf(p);
-  } else {
-    expr = ParseExpr(p);
-    if (kSemicolon != p->symbol) {
-      func_error(logger, "expect a ; {}", to_string(*p));
-      return nullptr;
-    }
-    ++p;
+  AstNode *expr = ParseExpr(p);
+  if (kSemicolon != p->symbol) {
+    func_error(logger, "expect a ; {}", to_string(*p));
+    return nullptr;
   }
-
+  ++p;
   return expr;
 }
 
@@ -215,6 +203,9 @@ AstNode *ClikeParser::ParsePrimaryExpr(TokenIterator &p) {
     ++p;
 
     return expr;
+
+  } else if (kPrintf == p->symbol) {
+    return ParsePrintf(p);
 
   } else {
     // begin with identifier & positive number
