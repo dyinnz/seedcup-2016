@@ -6,7 +6,7 @@
 
 #include <vector>
 #include "clike_ast.h"
-#include "symbol_table.h"
+#include "variable_table.h"
 
 class Interpreter {
  public:

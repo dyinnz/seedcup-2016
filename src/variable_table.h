@@ -20,6 +20,7 @@ namespace symbol_table {
 
     int GetInt(const std::string key);
     void SetInt(const std::string key, const int val);
+    void NewInt(const std::string key, const int val = 0xEEEEEEEE);
 
     void PushLevel();
     void PopLevel();
@@ -28,6 +29,8 @@ namespace symbol_table {
     void LeaveLevel();
 
     void PopToNowLevel();
+
+    void Print();
 
   public:
     typedef std::unordered_map<std::string, int> table_t;

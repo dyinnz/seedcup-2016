@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "symbol_table.h"
+#include "variable_table.h"
 
 using namespace std;
 
