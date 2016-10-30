@@ -5,6 +5,11 @@
 #include "clike_grammar.h"
 
 namespace clike_grammar {
+
+/**
+ * Definition of teminal symbol
+ */
+
 // keyword
 TERMINAL(kIf)
 TERMINAL(kElse)
@@ -50,22 +55,31 @@ TERMINAL(kGE) // >=
 TERMINAL(kEQ) // ==
 TERMINAL(kNE) // !=
 
+/**
+ * Definition of non-terminal symbol
+ */
 NON_TERMINAL(kBlock)
 NON_TERMINAL(kIfRoot)
 
+
+/**
+ * @see clike_grammar.h
+ */
 Tokenizer BuilderClikeTokenizer() {
   TokenizerBuilder builder;
 
   builder
       .SetLineComment("//")
       .SetBlockComment("/*", "*/")
+      /* Ingore all space symbol and LF */
       .SetIgnoreSet({kSpaceSymbol, kLFSymbol});
 
   builder.SetPatterns(
       {
           // space
           {"[ \v\t\f]", kSpaceSymbol},
-          {"\r\n", kLFSymbol},
+          {"\r\n", kLFSymbol}, // dos-style LF
+
           // keyword
           {"if", kIf},
           {"else", kElse},
@@ -75,6 +89,7 @@ Tokenizer BuilderClikeTokenizer() {
           {"do", kDo},
           {"int", kInt},
           {"printf", kPrintf},
+
           // multi-char operator
           {R"(\+\+)", kInc},
           {"--", kDec},
@@ -82,6 +97,7 @@ Tokenizer BuilderClikeTokenizer() {
           {">=", kGE},
           {"==", kEQ},
           {"!=", kNE},
+
           // one-char operator
           {"{", kLeftBrace},
           {"}", kRightBrace},
@@ -96,6 +112,7 @@ Tokenizer BuilderClikeTokenizer() {
           {"/", kDiv},
           {"<", kLT},
           {">", kGT},
+
           // ID & literal
           {R"(\d+)", kNumber},
           {R"("([^"]|\\")*")", kString},
@@ -106,4 +123,4 @@ Tokenizer BuilderClikeTokenizer() {
   return builder.Build();
 }
 
-}
+} // end of namespace clike_grammar

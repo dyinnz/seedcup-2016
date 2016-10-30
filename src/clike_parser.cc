@@ -13,16 +13,23 @@ using namespace simple_logger;
 
 using std::move;
 
+/**
+ * @brief   This is a simple launcher function. It do some simple work.
+ * @see     clike_parser.h
+ */
 Ast ClikeParser::Parse(std::vector<Token> &tokens) {
+  // push a sentry in case of touch the ending iterator of tokens
   tokens.push_back(kEofToken);
-  curr_ = tokens.begin();
 
-  auto p = curr_;
+  // launch the parsing by call ParseBlockBody(): Start -> BlockBody
+  auto p = tokens.begin();
   auto block = ParseBlockBody(p);
 
-  ast_.set_root(block);
-  PrintAstNode(ast_.root());
+  // for debugging
+  PrintAstNode(block);
 
+  // set the root and
+  ast_.set_root(block);
   return move(ast_);
 }
 
@@ -170,6 +177,7 @@ AstNode *ClikeParser::ParsePrintf(TokenIterator &p) {
  * @brief   ExprStmt -> PrintfStmt | Expr ";"
  */
 AstNode *ClikeParser::ParseExprStmt(TokenIterator &p) {
+  // TODO: move Printf Expr to Primary Expr
   AstNode *expr = nullptr;
   if (kPrintf == p->symbol) {
     expr = ParsePrintf(p);
@@ -434,7 +442,11 @@ AstNode *ClikeParser::ParseExpr(TokenIterator &p) {
 /**
  * @param p Token position
  * @return  A node of a single statement
- * @brief   Parsing single statement
+ *
+ * @brief   Parsing single statement.
+ *
+ * @details A single statement could be a single expression statement,
+ *          a block around
  */
 AstNode *ClikeParser::ParseSingleStmt(TokenIterator &p) {
   auto parse_break = [this](TokenIterator &p) -> AstNode * {
@@ -511,7 +523,7 @@ AstNode *ClikeParser::ParseBlockBody(TokenIterator &p) {
  * @return  A node of if-root
  */
 AstNode *ClikeParser::ParseIf(TokenIterator &p) {
-  auto parse_if_clause = [this](TokenIterator &p) -> AstNode* {
+  auto parse_if_clause = [this](TokenIterator &p) -> AstNode * {
     // if token
     auto clause = ast_.CreateTerminal(move(*p));
     ++p;
@@ -575,6 +587,12 @@ AstNode *ClikeParser::ParseIf(TokenIterator &p) {
 /**
  * @param p Token position
  * @return  A node of for
+ *
+ * @brief   Parsing for structure
+ * @details There are three pseudo expression in for: Init, Condition, Step.
+ *          Init could be any statement,
+ *          Condition could be only be expr statement,
+ *          Step could to be only be expr statement.
  */
 AstNode *ClikeParser::ParseFor(TokenIterator &p) {
   if (kFor != p->symbol) {
@@ -590,9 +608,10 @@ AstNode *ClikeParser::ParseFor(TokenIterator &p) {
   }
   ++p;
 
-  // TODO: handle too many cases
+  // first expression with ;
   auto init = ParseSingleStmt(p);
 
+  // second expression with ;
   AstNode *condition = nullptr;
   if (kSemicolon == p->symbol) {
     // empty condition
@@ -608,6 +627,7 @@ AstNode *ClikeParser::ParseFor(TokenIterator &p) {
     ++p;
   }
 
+  // third expression with )
   AstNode *step = nullptr;
   if (kRightParen == p->symbol) {
     step = ast_.CreateTerminal(Token(*prev(p)));
@@ -623,6 +643,7 @@ AstNode *ClikeParser::ParseFor(TokenIterator &p) {
 
   auto body = ParseSingleStmt(p);
 
+  // construct for node
   for_node->push_child_back(init);
   for_node->push_child_back(condition);
   for_node->push_child_back(step);
@@ -630,7 +651,15 @@ AstNode *ClikeParser::ParseFor(TokenIterator &p) {
   return for_node;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of while
+ *          while (expr) {      // Part 1
+ *            multi-statement   // Part 2
+ *          }
+ */
 AstNode *ClikeParser::ParseWhile(TokenIterator &p) {
+  // Part 1
   if (kWhile != p->symbol) {
     func_error(logger, "expect a while {}", to_string(*p));
     return nullptr;
@@ -652,14 +681,24 @@ AstNode *ClikeParser::ParseWhile(TokenIterator &p) {
   }
   ++p;
 
+  // Part 2
   auto body = ParseSingleStmt(p);
 
+  // construct while node
   while_node->push_child_back(condition);
   while_node->push_child_back(body);
   return while_node;
 }
 
+/**
+ * @param p Token position
+ * @return  A node of do while
+ *          do {                    // Part 1
+ *            multi-statement       // Part 2
+ *          } while (expr);         // Part 3
+ */
 AstNode *ClikeParser::ParseDoWhile(TokenIterator &p) {
+  // Part 1
   if (kDo != p->symbol) {
     func_error(logger, "expect a do {}", to_string(*p));
     return nullptr;
@@ -667,8 +706,10 @@ AstNode *ClikeParser::ParseDoWhile(TokenIterator &p) {
   auto do_node = ast_.CreateTerminal(move(*p));
   ++p;
 
+  // Part 2
   auto body = ParseBraceBlock(p);
 
+  // Part 3
   if (kWhile != p->symbol) {
     func_error(logger, "expect a while {}", to_string(*p));
     return nullptr;
@@ -694,6 +735,7 @@ AstNode *ClikeParser::ParseDoWhile(TokenIterator &p) {
   }
   ++p;
 
+  // construct the do-while node
   do_node->push_child_back(body);
   do_node->push_child_back(condition);
   return do_node;
