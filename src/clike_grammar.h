@@ -8,7 +8,18 @@
 
 namespace clike_grammar {
 
-// Terminal
+/**
+ * C-like language grammar specification
+ *
+ * Including the declaration of terminal and non-terminal symbol.
+ * A declaration of a function that build the tokenizer.
+ */
+
+
+/**
+ * Terminal symbol
+ */
+
 // keyword
 DECLARE_SYMBOL(kIf, 11)
 DECLARE_SYMBOL(kElse, 12)
@@ -55,10 +66,16 @@ DECLARE_SYMBOL(kEQ, 35) // ==
 DECLARE_SYMBOL(kNE, 36) // !=
 
 
-// Non-Terminal
+/**
+ * Non-Terminal symbol
+ */
 DECLARE_SYMBOL(kBlock, 51)
 DECLARE_SYMBOL(kIfRoot, 52)
 
+/**
+ * @brief   Build the tokenzier for c-like programmar language
+ * @return  A tokenizer
+ */
 Tokenizer BuilderClikeTokenizer();
 
-} // end of namespace
+} // end of namespace clike_grammar

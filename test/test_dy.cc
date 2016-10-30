@@ -18,7 +18,7 @@ BaseLogger logger;
 
 int main() {
   logger.set_log_level(kDebug);
-  GET_FILE_DATA_SAFELY(data, size, "test/data/sample3.txt");
+  GET_FILE_DATA_SAFELY(data, size, "test/data/loop_5.c");
   logger.debug("\n{}", data);
 
   auto tokenizer = clike_grammar::BuilderClikeTokenizer();
@@ -33,9 +33,7 @@ int main() {
   }
 
   ClikeParser parser;
-  parser.Parse(tokens);
-
-  Interpreter interpreter(parser.TransferAst());
+  Interpreter interpreter(parser.Parse(tokens));
   interpreter.Exec();
 
   interpreter.OutputLines("output.txt");
