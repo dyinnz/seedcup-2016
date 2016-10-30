@@ -105,15 +105,17 @@ class AstNode {
 class Ast {
  public:
   Ast() {}
-  Ast(const AstNode &) = delete;
-  Ast &operator=(const AstNode &) = delete;
+  Ast(const Ast &) = delete;
+  Ast &operator=(const Ast &) = delete;
+  Ast(Ast &&) = default;
+  Ast &operator=(Ast &&) = default;
 
   /**
    * @brief     Release all the node that the ast hold
    */
   ~Ast() {
     for (auto node : node_manager_) {
-      // delete node;
+      delete node;
     }
     node_manager_.clear();
   }
