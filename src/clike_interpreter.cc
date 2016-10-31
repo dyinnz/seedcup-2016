@@ -361,6 +361,7 @@ void ClikeInterpreter::ExecFor(AstNode *node) {
   auto body = node->children().at(3);
 
   recordLine(node);
+  table_.PushLevel();
   for (ExecSingle(init); ExecSingle(condition) || condition->symbol() == kSemicolon; ExecSingle(step)) {
     if (body->symbol() == kBlock) {
       ExecLoopBlock(body);
@@ -373,6 +374,7 @@ void ClikeInterpreter::ExecFor(AstNode *node) {
       break;
     }
   }
+  table_.PopLevel();
 
   if (body->symbol() == kBlock) {
     table_.PopToNowLevel();
