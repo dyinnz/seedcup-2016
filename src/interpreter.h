@@ -5,7 +5,7 @@
 #pragma once
 
 #include <vector>
-#include "clike_ast.h"
+#include "ast.h"
 #include "variable_table.h"
 
 class Interpreter {
