@@ -5,7 +5,7 @@
 #include "simplelogger.h"
 #include "clike_grammar.h"
 #include "clike_parser.h"
-#include "interpreter.h"
+#include "clike_interpreter.h"
 
 using namespace std;
 using namespace simple_logger;
@@ -70,7 +70,7 @@ int main() {
   auto ast = parser.Parse(tokens);
 
   // interpret ast
-  Interpreter interpreter(std::move(ast));
+  ClikeInterpreter interpreter(std::move(ast));
   interpreter.Exec();
   interpreter.OutputLines(kOutputFilename);
 

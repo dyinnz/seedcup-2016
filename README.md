@@ -1,5 +1,5 @@
 
-C-like Programming Language Interpreter
+C-like Programming Language ClikeInterpreter
 ==============================
 by DY, HL from HUST
 
@@ -114,7 +114,7 @@ lue
 `clike_grammar`命名空间内用正则表达式定义了所用词法,然后使用`TokenizerBuilder`类构建词法分析器。
 构建的`Tokenizer`类为所需要的词法分析器，进行输入文件的词法分析，产生一串顺序的Tokens。
 生成的Tokens交由`ClikeParser`进行语法分析，构建抽象语法树(AST)。
-`ClikeParser`类生成的AST交由`Interpreter`类进行解释执行，完成所有计算和操作。
+`ClikeParser`类生成的AST交由`ClikeInterpreter`类进行解释执行，完成所有计算和操作。
 `SymbolTable`类为符号表，实现了作用域的分级与解释期变量的保存。
 
 ## 程序逻辑
@@ -123,7 +123,7 @@ lue
 2. 调用`tokenizer = BuildClikeTokenizer()`构造词法分析器
 3. 调用`tokens = tokenizer.LexicalAnalyze(text)`针对源代码进行词法分析，并返回一串Token。
 4. 创建`ClikeParser parser`，调用`ast = parser.Parse(tokens)`对所有的Token进行词法分析。得到抽象语法树(ast)。
-5. 创建`Interpreter interpreter`，调用`interpreter.Exec()`将对ast解释执行，并记录行号信息
+5. 创建`ClikeInterpreter interpreter`，调用`interpreter.Exec()`将对ast解释执行，并记录行号信息
 6. 调用`interpreter.OutputLines()`输出结果
 
 
@@ -137,7 +137,7 @@ lue
 
 #### ClikeParser
 
-#### Interpreter
+#### ClikeInterpreter
 
 星期一, 31. 十月 2016 08:04上午 
 星期一, 31. 十月 2016 09:15上午 

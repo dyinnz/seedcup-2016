@@ -1,5 +1,5 @@
 //
-// Created by coder on 16-9-8.
+// Created by Dyinnz on 16-9-8.
 //
 
 #define CATCH_CONFIG_MAIN
@@ -59,12 +59,12 @@ TEST_CASE("Lexical analyse") {
 
   REQUIRE(6 == tokens.size());
 
-  REQUIRE(tokens[0].str == "if");
-  REQUIRE(tokens[1].str == "there");
-  REQUIRE(tokens[2].str == "are");
-  REQUIRE(tokens[3].str == "\\n");
-  REQUIRE(tokens[4].str == "1000");
-  REQUIRE(tokens[5].str == "dogs");
+  REQUIRE(tokens[0].text == "if");
+  REQUIRE(tokens[1].text == "there");
+  REQUIRE(tokens[2].text == "are");
+  REQUIRE(tokens[3].text == "\\n");
+  REQUIRE(tokens[4].text == "1000");
+  REQUIRE(tokens[5].text == "dogs");
 
   REQUIRE(tokens[0].symbol == kIf);
   REQUIRE(tokens[1].symbol == kWord);

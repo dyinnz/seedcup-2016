@@ -1,5 +1,5 @@
 //
-// Created by coder on 16-10-25.
+// Created by Dyinnz on 16-10-25.
 //
 
 #include <cstdlib>
@@ -7,7 +7,7 @@
 #include <string.h>
 #include <fstream>
 #include <unordered_set>
-#include "interpreter.h"
+#include "clike_interpreter.h"
 #include "clike_grammar.h"
 #include "simplelogger.h"
 
@@ -18,7 +18,7 @@ using namespace clike_grammar;
 /**
  * @brief  Start interpret
  */
-void Interpreter::Exec() {
+void ClikeInterpreter::Exec() {
   is_break_ = false;
   last_line_ = 0;
   ExecBlock(ast_.root());
@@ -29,7 +29,7 @@ void Interpreter::Exec() {
  * @return  result of this line of code
  * @brief Interpret a single line
  */
-int Interpreter::ExecSingle(AstNode *node) {
+int ClikeInterpreter::ExecSingle(AstNode *node) {
   static std::unordered_set<Symbol> expr_head = {
     kInc, kDec,
     kAdd, kSub, kMul, kDiv, kAssign,
@@ -91,7 +91,7 @@ int Interpreter::ExecSingle(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Interpret a block of code
  */
-void Interpreter::ExecBlock(AstNode *node) {
+void ClikeInterpreter::ExecBlock(AstNode *node) {
   table_.PushLevel();
   for (auto child : node->children()) {
     ExecSingle(child);
@@ -106,7 +106,7 @@ void Interpreter::ExecBlock(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Interpret a block of code of a loop struct
  */
-void Interpreter::ExecLoopBlock(AstNode *node) {
+void ClikeInterpreter::ExecLoopBlock(AstNode *node) {
   table_.EnterLevel();
   for (auto child : node->children()) {
     ExecSingle(child);
@@ -121,7 +121,7 @@ void Interpreter::ExecLoopBlock(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Define a var
  */
-void Interpreter::ExecTypeHead(AstNode *node) {
+void ClikeInterpreter::ExecTypeHead(AstNode *node) {
   for (auto child : node->children()) {
     if (kIdentifier == child->symbol()) {
       table_.NewInt(child->text());
@@ -146,7 +146,7 @@ void Interpreter::ExecTypeHead(AstNode *node) {
  * @return  result of this expr
  * @brief Interpret a expr
  */
-int Interpreter::EvalExpr(AstNode *node) {
+int ClikeInterpreter::EvalExpr(AstNode *node) {
   recordLine(node);
   switch (node->symbol().ID()) {
     case kNumberID:
@@ -242,7 +242,7 @@ int Interpreter::EvalExpr(AstNode *node) {
  * @return  result of printf()
  * @brief Interpret printf()
  */
-int Interpreter::ExecPrintf(AstNode *node) {
+int ClikeInterpreter::ExecPrintf(AstNode *node) {
   auto result = node->children().front()->text().length();
 
   // TODO: I have added next line for
@@ -261,7 +261,7 @@ int Interpreter::ExecPrintf(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Interpret [if-else if-else] struct
  */
-void Interpreter::ExecIfRoot(AstNode *node) {
+void ClikeInterpreter::ExecIfRoot(AstNode *node) {
   for (auto clause: node->children()) {
 
     if (clause->symbol() == kIf) {
@@ -283,7 +283,7 @@ void Interpreter::ExecIfRoot(AstNode *node) {
  * @return result of if
  * @brief Interpret [if-else if] struct
  */
-int Interpreter::ExecIfClause(AstNode *node) {
+int ClikeInterpreter::ExecIfClause(AstNode *node) {
   if (kIf != node->symbol()) {
     return 0;
   }
@@ -304,7 +304,7 @@ int Interpreter::ExecIfClause(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Interpret [else] struct
  */
-void Interpreter::ExecElseClause(AstNode *node) {
+void ClikeInterpreter::ExecElseClause(AstNode *node) {
   if (kElse != node->symbol()) {
     return;
   }
@@ -316,7 +316,7 @@ void Interpreter::ExecElseClause(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Interpret [for] struct
  */
-void Interpreter::ExecFor(AstNode *node) {
+void ClikeInterpreter::ExecFor(AstNode *node) {
   if (kFor != node->symbol()) {
     return;
   }
@@ -349,7 +349,7 @@ void Interpreter::ExecFor(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Interpret [while] struct
  */
-void Interpreter::ExecWhile(AstNode *node) {
+void ClikeInterpreter::ExecWhile(AstNode *node) {
   if (kWhile != node->symbol()) {
     return;
   }
@@ -379,7 +379,7 @@ void Interpreter::ExecWhile(AstNode *node) {
  * @param node A AST node wants to interpret
  * @brief Interpret [do-while] struct
  */
-void Interpreter::ExecDoWhile(AstNode *node) {
+void ClikeInterpreter::ExecDoWhile(AstNode *node) {
   if (kDo != node->symbol()) {
     return;
   }
@@ -409,7 +409,7 @@ void Interpreter::ExecDoWhile(AstNode *node) {
  * @param filename output file
  * @brief output line number information
  */
-void Interpreter::OutputLines(const char *filename) {
+void ClikeInterpreter::OutputLines(const char *filename) {
   std::ofstream fout(filename);
   for (size_t i = 0; i < run_lines_.size(); ++i) {
     if (i != run_lines_.size() - 1)
@@ -424,7 +424,7 @@ void Interpreter::OutputLines(const char *filename) {
  * @param node A AST node interpreting
  * @brief record line infomation
  */
-void Interpreter::recordLine(AstNode *node) {
+void ClikeInterpreter::recordLine(AstNode *node) {
   if (last_line_ != node->row()) {
     func_log(logger, "now running line {}: node {}", node->row(), node->to_string());
     run_lines_.push_back(node->row());

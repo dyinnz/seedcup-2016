@@ -1,4 +1,4 @@
-// // Created by coder on 16-9-5.
+// // Created by Dyinnz on 16-9-5.
 //
 
 #include "tokenizer.h"
@@ -91,7 +91,7 @@ Token Tokenizer::GetNextToken(const char *&p) {
     }
   }
 
-  longest_token.str = std::string(p, s);
+  longest_token.text = std::string(p, s);
   longest_token.row = curr_row_;
   longest_token.column = p - curr_row_pos_;
   p = s;
@@ -138,7 +138,7 @@ bool Tokenizer::LexicalAnalyze(const char *beg,
     if (token.symbol == kLFSymbol) {
       curr_row_ += 1;
       curr_row_pos_ = curr_;
-      token.str = "\\n";
+      token.text = "\\n";
     }
     // skip ignored token
     if (ignore_set_.end() == ignore_set_.find(token.symbol)) {

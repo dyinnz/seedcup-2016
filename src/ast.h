@@ -1,5 +1,5 @@
 //
-// Created by coder on 16-10-24.
+// Created by Dyinnz on 16-10-24.
 //
 
 #pragma once
@@ -24,7 +24,7 @@ class AstNode {
   AstNode(const Symbol &symbol) : symbol_(symbol) {}
   AstNode(Token &&token)
       : symbol_(token.symbol),
-        str_(std::move(token.str)),
+        text_(std::move(token.text)),
         row_(token.row),
         column_(token.column) {}
 
@@ -36,7 +36,7 @@ class AstNode {
     std::ostringstream oss;
     if (symbol_.IsTerminal()) {
       oss << "Node/T { P(" << row_ << ',' << column_ << "), " << symbol_
-          << ", " << str_ << "}";
+          << ", " << text_ << "}";
     } else {
       oss << "Node/NT { " << symbol_ << " }";
     }
@@ -70,7 +70,7 @@ class AstNode {
    *            a token
    */
   const std::string &text() const {
-    return str_;
+    return text_;
   }
 
   /**
@@ -90,7 +90,7 @@ class AstNode {
  private:
   std::vector<AstNode *> children_;
   Symbol symbol_;
-  std::string str_;
+  std::string text_;
   size_t row_{SIZE_MAX};
   size_t column_{SIZE_MAX};
 };

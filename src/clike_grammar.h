@@ -1,5 +1,5 @@
 //
-// Created by coder on 16-10-23.
+// Created by Dyinnz on 16-10-23.
 //
 
 #pragma once
@@ -13,8 +13,9 @@ namespace clike_grammar {
  *
  * Including the declaration of terminal and non-terminal symbol.
  * A declaration of a function that build the tokenizer.
+ *
+ * Each symbol is assigned a unique number for distinguishing others.
  */
-
 
 /**
  * Terminal symbol

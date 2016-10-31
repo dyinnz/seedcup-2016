@@ -1,6 +1,18 @@
-//
-// Created by coder on 16-9-8.
-//
+/*******************************************************************************
+ * Author: Dyinnz.HUST.UniqueStudio
+ * Email:  ml_143@sina.com
+ * Github: https://github.com/dyinnz
+ * Date:   2016-09-08
+ ******************************************************************************/
+
+/**
+ * This is a simple memory manage library for a lot of small piece memory.
+ * There are three level memory manage class. Each level class solve some
+ * problem, and higher level class uses lower level one.
+ *
+ * You could use any level of three, but the class SmallObjPool is easiest to
+ * use.
+ */
 
 #pragma once
 
@@ -11,6 +23,9 @@
 
 constexpr std::uint8_t kDefaultBlocksNum = 255;
 
+/**
+ * @brief A class manage memory directly
+ */
 struct Chunk {
   void Init(std::size_t block_size, uint8_t blocks_num) {
     assert(blocks_num > 0);
@@ -58,6 +73,9 @@ struct Chunk {
   uint8_t free_num_;
 };
 
+/**
+ * @brief A class manage fixed size memory
+ */
 class FixedAllocator {
  public:
   FixedAllocator(std::size_t block_size, uint8_t blocks_num) :
@@ -125,6 +143,9 @@ class FixedAllocator {
   uint8_t blocks_num_;
 };
 
+/**
+ * @brief A class with a Create() function which could create a new class easily
+ */
 template<class T, std::uint8_t N = kDefaultBlocksNum>
 class SmallObjPool {
  public:

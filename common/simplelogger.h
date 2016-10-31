@@ -5,6 +5,11 @@
  * Date:   2016-06-04
  ******************************************************************************/
 
+/**
+ * This is a simple Logger library, support multi-level output. Print
+ * current function and current line number more easily
+ */
+
 #pragma once
 
 #include <cassert>
@@ -15,6 +20,9 @@
 
 namespace simple_logger {
 
+/**
+ * Some macro for easier usage
+ */
 #define func_debug(__logger, __format, ...) do { \
   __logger.debug("L{}:{}() " __format, __LINE__, __func__, ##__VA_ARGS__); \
 } while (false);
@@ -51,6 +59,12 @@ inline void parse_format(std::ostringstream &ss, const char *format) {
   ss << format;
 }
 
+/**
+ * @param ss        output string stream
+ * @param format    c-type printf format
+ * @param v         the first one of variable parameters
+ * @param args      the rest of variable parameters
+ */
 template<typename T, typename ...A>
 void parse_format(std::ostringstream &ss,
                   const char *format,
@@ -61,7 +75,7 @@ void parse_format(std::ostringstream &ss,
 /*----------------------------------------------------------------------------*/
 
 /**
- * logger for single thread
+ * @brief A logger for single thread
  */
 class BaseLogger {
  public:
@@ -123,26 +137,6 @@ class BaseLogger {
   };
 };
 
-/**
- * logger for multi thread
- */
-class MTLogger : BaseLogger {
- public:
-
- private:
-
-};
-
-/**
- * logger for mpi
- */
-class MPILogger : BaseLogger {
- public:
-
- private:
-
-};
-
 /*----------------------------------------------------------------------------*/
 // implement
 
@@ -150,7 +144,7 @@ template<typename T, typename ...A>
 void parse_format(std::ostringstream &ss,
                   const char *format,
                   const T &v,
-                  A &&...              args) {
+                  A &&...args) {
 
   assert(format);
   const char *p{format};
@@ -177,7 +171,8 @@ void parse_format(std::ostringstream &ss,
         }
         break;
 
-      default:ss << *p;
+      default:
+        ss << *p;
         p += 1;
         break;
     }
@@ -186,8 +181,11 @@ void parse_format(std::ostringstream &ss,
 
 /*----------------------------------------------------------------------------*/
 
-
-
+/**
+ * @brief Utility function for printing
+ * @param level     logging level
+ * @param args      variable parameters
+ */
 template<typename ...A>
 void BaseLogger::print_wrapper(Level level, A &&... args) {
 
@@ -202,4 +200,5 @@ void BaseLogger::print_wrapper(Level level, A &&... args) {
 
 } // end of namespace simple_logger
 
+// Declare the logger
 extern simple_logger::BaseLogger logger;

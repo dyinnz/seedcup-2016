@@ -1,6 +1,13 @@
 //
-// Created by coder on 16-9-3.
+// Created by Dyinnz on 16-9-3.
 //
+
+/**
+ * This is a regular expression parser using descent recursive parsing.
+ *
+ * User could parse a regular pattern to a DFA or a raw NFA commponent which
+ * can be composed a complete NFA.
+ */
 
 #pragma once
 
@@ -10,11 +17,16 @@
 namespace regular_expression {
 
 /**
- * Regular Expression Parser
+ * @brief Regular Expression Parser
  */
-
 class RegexParser {
  public:
+
+  /**
+   * @param nfa_manager NFA memory manager
+   * @brief You could pass a NFA manager to this parser, or it will create one
+   *        its own.
+   */
   RegexParser(
       std::shared_ptr<NFAManager> nfa_manager = nullptr)
       : nfa_manager_(nfa_manager) {
@@ -32,23 +44,52 @@ class RegexParser {
 
   NFAComponent *ParseToNFAComponent(const std::string &s);
 
+  /**
+   * @return Memory manager
+   */
   NFAManager &GetNFAManager() {
     return *nfa_manager_;
   }
 
  private:
+  /**
+   * @param p   current string position
+   * @return    NFA component
+   */
+
+  /**
+   * @brief     a|b
+   */
   NFAComponent *ParseUnion(const char *&p);
 
+  /**
+   * @brief     ab
+   */
   NFAComponent *ParseConcatenate(const char *&p);
 
+  /**
+   * @brief     a
+   */
   NFAComponent *ParseBasic(const char *&p);
 
+  /**
+   * @brief     (abc)
+   */
   NFAComponent *ParseGroup(const char *&p);
 
+  /**
+   * @brief     [abc]
+   */
   NFAComponent *ParseSet(const char *&p);
 
+  /**
+   * @deprecated
+   */
   NFAComponent *ParseString(const char *&p);
 
+  /**
+   * @brief     \\w
+   */
   NFAComponent *ParseEscape(const char *&p);
 
  private:

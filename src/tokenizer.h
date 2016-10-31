@@ -1,5 +1,5 @@
 //
-// Created by coder on 16-9-5.
+// Created by Dyinnz on 16-9-5.
 //
 
 #pragma once
@@ -13,6 +13,15 @@ using namespace regular_expression;
 
 typedef std::pair<std::string, Symbol> TokenPattern;
 
+/**
+ * @brief   A common Tokenizer .
+ *
+ * @details The tokenizer could be builded by some token pattern using
+ *          regular expression. The earlier patterns have higher priority.
+ *
+ *          The tokenizer should only be created by TokenizerBuilder instead of
+ *          creating directly.
+ */
 class Tokenizer {
  public:
   const DFA *GetTokenDFA() const {
@@ -25,6 +34,11 @@ class Tokenizer {
 
   Token GetNextToken(const char *&p);
 
+  /**
+   * @param s       the source text
+   * @param tokens  the tokens extracted
+   * @return        true on success, false on failure.
+   */
   bool LexicalAnalyze(const std::string &s,
                       std::vector<Token> &tokens);
 
@@ -60,6 +74,9 @@ class Tokenizer {
   size_t curr_row_;
 };
 
+/**
+ * @brief   A helper class that build class Tokenizer.
+ */
 class TokenizerBuilder {
  public:
   bool IsError() {

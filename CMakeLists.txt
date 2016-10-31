@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
 
-include_directories(include/)
+include_directories(common/)
 include_directories(src/)
 
-file(GLOB Sources ./src/*.cc ./src/*.cpp)
+file(GLOB Sources src/*.cc src/*.h common/*.h)
 
 add_executable(main ${Sources})
 
@@ -17,7 +17,7 @@ add_executable(test_dy
         src/regex_parser.cc
         src/tokenizer.cc
         src/ast.cc
-        src/interpreter.cc
+        src/clike_interpreter.cc
         src/variable_table.cc
         test/test_dy.cc)
 

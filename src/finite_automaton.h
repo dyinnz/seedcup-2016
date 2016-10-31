@@ -67,7 +67,7 @@ std::string to_string(const Node &node);
 std::string to_string(const NumberSet &num_set);
 
 /**
- * for debug
+ * for debugging
  */
 
 void PrintNFA(const NFA *nfa);

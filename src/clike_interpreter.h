@@ -1,5 +1,5 @@
 //
-// Created by coder on 16-10-25.
+// Created by Dyinnz on 16-10-25.
 //
 
 #pragma once
@@ -8,9 +8,9 @@
 #include "ast.h"
 #include "variable_table.h"
 
-class Interpreter {
+class ClikeInterpreter {
  public:
-  Interpreter(Ast &&ast) : ast_(std::move(ast)) {}
+  ClikeInterpreter(Ast &&ast) : ast_(std::move(ast)) {}
 
   void Exec();
   int ExecSingle(AstNode *node);

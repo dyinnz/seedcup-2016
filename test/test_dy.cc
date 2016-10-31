@@ -1,5 +1,5 @@
 //
-// Created by coder on 16-10-24.
+// Created by Dyinnz on 16-10-24.
 //
 
 #include <iostream>
@@ -9,7 +9,7 @@
 #include "simplelogger.h"
 #include "clike_grammar.h"
 #include "clike_parser.h"
-#include "interpreter.h"
+#include "clike_interpreter.h"
 
 using namespace std;
 using namespace simple_logger;
@@ -33,7 +33,7 @@ int main() {
   }
 
   ClikeParser parser;
-  Interpreter interpreter(parser.Parse(tokens));
+  ClikeInterpreter interpreter(parser.Parse(tokens));
   interpreter.Exec();
 
   interpreter.OutputLines("output.txt");
