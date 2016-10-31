@@ -247,11 +247,7 @@ int ClikeInterpreter::EvalExpr(AstNode *node) {
  * @return  result of printf()
  * @brief Interpret printf()
  */
-<<<<<<< HEAD:src/clike_interpreter.cc
 int ClikeInterpreter::ExecPrintf(AstNode *node) {
-  auto result = node->children().front()->text().length();
-=======
-int Interpreter::ExecPrintf(AstNode *node) {
   auto raw_text = node->children().front()->text();
   auto child_iter = node->children().begin() + 1;
 
@@ -282,7 +278,6 @@ int Interpreter::ExecPrintf(AstNode *node) {
   }
 
   auto result = text.length();
->>>>>>> 01745123656afe23175244108b818a849f594cc1:src/interpreter.cc
 
   // TODO: I have added next line for
   // that there is no expression in the node of Printf
