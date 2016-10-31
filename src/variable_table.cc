@@ -3,7 +3,7 @@
 //
 #include <iostream>
 
-#include "symbol_table.h"
+#include "variable_table.h"
 
 using namespace symbol_table;
 using namespace std;
@@ -64,6 +64,17 @@ void SymbolTable::SetInt(const std::string key, const int val) {
 }
 
 /**
+ * @param key var's name
+ * @param val var's value
+ * @brief  Define a var from symbol table.
+ */
+void SymbolTable::NewInt(const std::string key, const int val) {
+  table_t &table = *tables[now_depth];
+
+  table[key] = val;
+}
+
+/**
  * @brief  Set a new level
  */
 void SymbolTable::PushLevel() {
@@ -119,3 +130,20 @@ void SymbolTable::PopToNowLevel() {
     tables.pop_back();
   }
 }
+
+void SymbolTable::Print() {
+  cout << "-----Table Begin-----" << endl;
+  cout << "table size: " << tables.size() << ", now depth: " << now_depth << endl;
+  int depth = 0;
+  for (auto table : tables) {
+    for (auto keyval : *table) {
+      for (int i = 0; i < depth; i++){
+        cout << "\t";
+      }
+      cout << "|" << keyval.first << ": " << keyval.second << endl;
+    }
+    depth++;
+  }
+  cout << "-----Table End-----" << endl;
+}
+

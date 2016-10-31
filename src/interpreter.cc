@@ -124,7 +124,7 @@ void Interpreter::ExecLoopBlock(AstNode *node) {
 void Interpreter::ExecTypeHead(AstNode *node) {
   for (auto child : node->children()) {
     if (kIdentifier == child->symbol()) {
-      // ignore it
+      table_.NewInt(child->text());
       continue;
 
     } else if (kAssign == child->symbol()) {
@@ -132,8 +132,8 @@ void Interpreter::ExecTypeHead(AstNode *node) {
       auto expr = child->children().back();
       auto result = EvalExpr(expr);
 
-      table_.SetInt(id_node->str(), result);
-      func_debug(logger, "name: {}, value: {}", id_node->str(), result);
+      table_.NewInt(id_node->text(), result);
+      func_debug(logger, "name: {}, value: {}", id_node->text(), result);
 
     } else {
       func_error(logger, "illegal node: {}", child->to_string());
@@ -150,16 +150,16 @@ int Interpreter::EvalExpr(AstNode *node) {
   recordLine(node);
   switch (node->symbol().ID()) {
     case kNumberID:
-      return atoi(node->str().c_str());
+      return atoi(node->text().c_str());
 
     case kIdentifierID:
-      return table_.GetInt(node->str());
+      return table_.GetInt(node->text());
 
     case kCommaID:EvalExpr(node->children().front());
       return EvalExpr(node->children().back());
 
     case kAssignID: {
-      auto id_name = node->children().front()->str();
+      auto id_name = node->children().front()->text();
       auto result = EvalExpr(node->children().back());
       table_.SetInt(id_name, result);
       return result;
@@ -214,20 +214,23 @@ int Interpreter::EvalExpr(AstNode *node) {
 
     case kIncID: {
       auto result = EvalExpr(node->children().front());
-      auto id_name = node->children().front()->str();
+      auto id_name = node->children().front()->text();
       table_.SetInt(id_name, table_.GetInt(id_name) + 1);
       return result;
     }
 
     case kDecID: {
       auto result = EvalExpr(node->children().front());
-      auto id_name = node->children().front()->str();
+      auto id_name = node->children().front()->text();
       table_.SetInt(id_name, table_.GetInt(id_name) - 1);
       return result;
     }
 
     case kStringID:
       return 1;   //Always return true
+
+    case kPrintfID:
+      return ExecPrintf(node);
 
     default:func_error(logger, "illegal node: {}", node->to_string());
       return 0;
@@ -240,7 +243,7 @@ int Interpreter::EvalExpr(AstNode *node) {
  * @brief Interpret printf()
  */
 int Interpreter::ExecPrintf(AstNode *node) {
-  auto result = strlen(node->children().front()->symbol().str());
+  auto result = node->children().front()->text().length();
 
   // TODO: I have added next line for
   // that there is no expression in the node of Printf
@@ -248,6 +251,8 @@ int Interpreter::ExecPrintf(AstNode *node) {
   for (auto child : node->children()) {
     EvalExpr(child);
   }
+
+  func_debug(logger, "printf return {}, val is {}", result, node->children().front()->text());
 
   return result;
 }
@@ -425,4 +430,5 @@ void Interpreter::recordLine(AstNode *node) {
     run_lines_.push_back(node->row());
     last_line_ = node->row();
   }
+//  table_.Print();
 }

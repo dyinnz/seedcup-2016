@@ -18,7 +18,7 @@ add_executable(test_dy
         src/tokenizer.cc
         src/ast.cc
         src/interpreter.cc
-        src/symbol_table.cpp
+        src/variable_table.cc
         test/test_dy.cc)
 
 add_executable(test_mem_manager

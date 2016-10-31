@@ -69,7 +69,7 @@ class AstNode {
    * @return    The string extracted from source code if the node attached to
    *            a token
    */
-  const std::string &str() const {
+  const std::string &text() const {
     return str_;
   }
 
