@@ -1,5 +1,7 @@
 #!/bin/bash
 
+origin_root=`pwd`
+echo 'pwd ' $origin_root
 dest_root='初赛提交-有点菜'
 src=$dest_root/Src
 bin=$dest_root/Bin
@@ -20,12 +22,15 @@ cp -r ./README.pdf $doc/
 
 head -n 15 ./CMakeLists.txt > $src/CMakeLists.txt
 cp -r ./clean.sh $src/
+cp -r ./input.txt $src/
 
-# echo 'test compiling...'
-# cd $src
-# cmake .
-# make
-# ./clean.sh
+echo 'test compiling...'
+cd $src
+cmake .
+make
+./main
+./clean.sh
+cd $origin_root
 
 rm $dest_root.zip
 zip -r $dest_root.zip $dest_root
