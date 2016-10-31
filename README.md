@@ -136,22 +136,3 @@ lue
 4. 创建`ClikeParser parser`，调用`ast = parser.Parse(tokens)`对所有的Token进行词法分析。得到抽象语法树(ast)。
 5. 创建`ClikeInterpreter interpreter`，调用`interpreter.Exec()`将对ast解释执行，并记录行号信息
 6. 调用`interpreter.OutputLines()`输出结果
-
-
-<<<<<<< HEAD
----------------------------------------------------------------
-
-### 程序接口简介
-
-#### TokenizerBuilder
-
-#### Tokenizer
-
-#### ClikeParser
-
-#### ClikeInterpreter
-
-=======
->>>>>>> 01745123656afe23175244108b818a849f594cc1
-星期一, 31. 十月 2016 08:04上午 
-星期一, 31. 十月 2016 09:15上午 
