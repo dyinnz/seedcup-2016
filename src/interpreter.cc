@@ -243,7 +243,16 @@ int Interpreter::EvalExpr(AstNode *node) {
  * @brief Interpret printf()
  */
 int Interpreter::ExecPrintf(AstNode *node) {
-  auto result = node->children().front()->text().length();
+  auto text = node->children().front()->text();
+  text = text.substr(1, text.length() - 2);
+  auto result = text.length();
+
+  for (int i = 0; i < text.length(); i++) {
+    if (text[i] == '\\') {
+      i++;
+      result--;
+    }
+  }
 
   // TODO: I have added next line for
   // that there is no expression in the node of Printf
@@ -252,7 +261,7 @@ int Interpreter::ExecPrintf(AstNode *node) {
     EvalExpr(child);
   }
 
-  func_debug(logger, "printf return {}, val is {}", result, node->children().front()->text());
+  func_debug(logger, "printf return {}, val is {}", result, text);
 
   return result;
 }
@@ -430,5 +439,5 @@ void Interpreter::recordLine(AstNode *node) {
     run_lines_.push_back(node->row());
     last_line_ = node->row();
   }
-//  table_.Print();
+  table_.Print();
 }
