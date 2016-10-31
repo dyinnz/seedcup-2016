@@ -114,7 +114,7 @@ Tokenizer BuilderClikeTokenizer() {
           {">", kGT},
 
           // ID & literal
-          {R"(\d+)", kNumber},
+          {R"((\d+)|(0(x|X)[a-f|A-F]+))", kNumber},  //TODO Hex Number (0xabcdef)
           {R"("([^"]|\\")*")", kString},
           {R"(\w(\w|\d)*)", kIdentifier},
       }

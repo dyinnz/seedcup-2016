@@ -35,7 +35,7 @@ class Interpreter {
  private:
 
   Ast ast_;
-  symbol_table::SymbolTable table_;
+  symbol_table::VariableTable table_;
   std::vector<size_t> run_lines_;
 
   bool is_break_;

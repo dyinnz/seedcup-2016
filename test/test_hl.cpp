@@ -10,7 +10,7 @@ using namespace std;
 int main() {
   cout << "hello world" << endl;
 
-  SymbolTable table;
+  VariableTable table;
 
   table.SetInt("i", 1);
   table.PushLevel();

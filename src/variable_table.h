@@ -12,11 +12,11 @@
 
 namespace symbol_table {
 
-  class SymbolTable {
+  class VariableTable {
   public:
-    SymbolTable();
+    VariableTable();
 
-    ~SymbolTable();
+    ~VariableTable();
 
     int GetInt(const std::string key);
     void SetInt(const std::string key, const int val);

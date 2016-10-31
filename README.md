@@ -5,9 +5,9 @@ by DY, HL from HUST
 
 
 ## 编译环境
-|       OS      |   Compiler  | Compiler Options |
-|---------------|-------------|------------------|
-| Linux >=4.7.0 | G++ >=6.2.1 | -std=c++11 -Wall |
+|       OS       |   Compiler   | Compiler Options | Compile Dependencies |
+|----------------|--------------|------------------|----------------------|
+| Linux >= 4.7.0 | g++ >= 6.2.1 | -std=c++11 -Wall |     cmake >= 2.8     |
 
 **为获得最佳用户体验，请使用Arch Linux (kernel: 4.8.4-1), g++6.2.1 编译并测试**
 
@@ -103,19 +103,30 @@ lue
   
 #### C-like Language 语法分析器
 + `src/clike_parser.h`  `src/clike_parser.cc` <br>
-  实用递归下降的手法，实现了C-like Language的语法分析，若输入源文件满足C-like Language的语法，则会生成一棵抽象语法树。
-  重要接口：
-  `Ast Parse(std::vector<Token> &tokens);` 针对tokens进行语法分析，返回一棵抽象语法书。
+  使用递归下降的手法，实现了C-like Language的语法分析，若输入源文件满足C-like Language的语法，则会生成一棵抽象语法树。
+        
+        重要接口：
+        Ast Parse(std::vector<Token> &tokens); 针对tokens进行语法分析，返回一棵抽象语法树。
 
 #### C-like Language 解释器：
-
-待补充
-
++ `variable_table.h` `variable_table.cc` <br>
+  定义了变量表，为解释器实现了分级的变量作用域。
+  
++ `src/interpreter.h` `src/interpreter.cc` <br>
+  遍历生成的抽象语法树，根据语义执行相应计算和控制。
+  
+        重要接口：
+        class Interpreter;
+        Interpreter(Ast &&ast); //使用生成的AST初始化解释器
+        void Exec();  //开始执行
+        void OutputLines(std::string filename); //输出结果
+       
+        
 `clike_grammar`命名空间内用正则表达式定义了所用词法,然后使用`TokenizerBuilder`类构建词法分析器。
 构建的`Tokenizer`类为所需要的词法分析器，进行输入文件的词法分析，产生一串顺序的Tokens。
 生成的Tokens交由`ClikeParser`进行语法分析，构建抽象语法树(AST)。
 `ClikeParser`类生成的AST交由`Interpreter`类进行解释执行，完成所有计算和操作。
-`SymbolTable`类为符号表，实现了作用域的分级与解释期变量的保存。
+`VariableTable`类为符号表，实现了作用域的分级与解释期变量的保存。
 
 ## 程序逻辑
 
@@ -126,18 +137,6 @@ lue
 5. 创建`Interpreter interpreter`，调用`interpreter.Exec()`将对ast解释执行，并记录行号信息
 6. 调用`interpreter.OutputLines()`输出结果
 
-
----------------------------------------------------------------
-
-### 程序接口简介
-
-#### TokenizerBuilder
-
-#### Tokenizer
-
-#### ClikeParser
-
-#### Interpreter
 
 星期一, 31. 十月 2016 08:04上午 
 星期一, 31. 十月 2016 09:15上午 
