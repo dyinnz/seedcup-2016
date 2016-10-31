@@ -16,7 +16,7 @@ add_executable(test_dy
         src/finite_automaton.cc
         src/regex_parser.cc
         src/tokenizer.cc
-        src/clike_ast.cc
+        src/ast.cc
         src/interpreter.cc
         src/symbol_table.cpp
         test/test_dy.cc)
@@ -41,6 +41,6 @@ add_executable(test_clike_parser
         src/finite_automaton.cc
         src/regex_parser.cc
         src/tokenizer.cc
-        src/clike_ast.cc
+        src/ast.cc
         test/test_clike_parser.cc)
 

@@ -18,7 +18,7 @@ BaseLogger logger;
 
 int main() {
   logger.set_log_level(kDebug);
-  GET_FILE_DATA_SAFELY(data, size, "test/data/loop_5.c");
+  GET_FILE_DATA_SAFELY(data, size, "test/systest_in/loop_5.c");
   logger.debug("\n{}", data);
 
   auto tokenizer = clike_grammar::BuilderClikeTokenizer();

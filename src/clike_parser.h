@@ -5,7 +5,7 @@
 #pragma once
 
 #include <stack>
-#include "clike_ast.h"
+#include "ast.h"
 
 /**
  * @brief   C-like programming langague Parser

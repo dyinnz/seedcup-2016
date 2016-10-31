@@ -2,13 +2,13 @@
 // Created by coder on 16-10-24.
 //
 
-#include "clike_ast.h"
+#include "ast.h"
 #include "simplelogger.h"
 
 using namespace simple_logger;
 
 /**
- * @see clike_ast.h
+ * @see ast.h
  */
 void PrintAstNode(AstNode *node, int deep) {
   for (int i = 0; i < deep; ++i) {
