@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include <fstream>
 #include <unordered_set>
 #include "clike_interpreter.h"
@@ -13,7 +14,7 @@
 
 using namespace simple_logger;
 using namespace clike_grammar;
-
+using namespace std;
 
 /**
  * @brief  Start interpret
@@ -147,10 +148,14 @@ void ClikeInterpreter::ExecTypeHead(AstNode *node) {
  * @brief Interpret a expr
  */
 int ClikeInterpreter::EvalExpr(AstNode *node) {
+  int result;
   recordLine(node);
   switch (node->symbol().ID()) {
     case kNumberID:
-      return atoi(node->text().c_str());
+      func_debug(logger, "Number's string is: {}", node->text());
+      result = stoi(node->text(), 0, 0);
+      func_debug(logger, "Number is: {}", result);
+      return result;
 
     case kIdentifierID:
       return table_.GetInt(node->text());
@@ -242,8 +247,42 @@ int ClikeInterpreter::EvalExpr(AstNode *node) {
  * @return  result of printf()
  * @brief Interpret printf()
  */
+<<<<<<< HEAD:src/clike_interpreter.cc
 int ClikeInterpreter::ExecPrintf(AstNode *node) {
   auto result = node->children().front()->text().length();
+=======
+int Interpreter::ExecPrintf(AstNode *node) {
+  auto raw_text = node->children().front()->text();
+  auto child_iter = node->children().begin() + 1;
+
+  std::string text = "";
+
+  for (size_t i = 1; i < raw_text.length() - 1; i++) {
+    if (raw_text[i] == '\\') {
+      i++;
+      text += raw_text[i];
+      continue;
+    }
+
+    if (raw_text[i] == '%') {
+      if (raw_text[i + 1] == '%') {
+        i++;
+        text += raw_text[i];
+        continue;
+      } else {
+        auto expr_result = EvalExpr(*child_iter);
+        child_iter++;
+
+        text += to_string(expr_result);
+        i++;
+        continue;
+      }
+    }
+    text += raw_text[i];
+  }
+
+  auto result = text.length();
+>>>>>>> 01745123656afe23175244108b818a849f594cc1:src/interpreter.cc
 
   // TODO: I have added next line for
   // that there is no expression in the node of Printf
@@ -252,7 +291,7 @@ int ClikeInterpreter::ExecPrintf(AstNode *node) {
     EvalExpr(child);
   }
 
-  func_debug(logger, "printf return {}, val is {}", result, node->children().front()->text());
+  func_debug(logger, "printf return {}, val is {}", result, text);
 
   return result;
 }
@@ -430,5 +469,5 @@ void ClikeInterpreter::recordLine(AstNode *node) {
     run_lines_.push_back(node->row());
     last_line_ = node->row();
   }
-//  table_.Print();
+  table_.Print();
 }

@@ -8,11 +8,11 @@
 using namespace symbol_table;
 using namespace std;
 
-SymbolTable::SymbolTable() : now_depth(0) {
+VariableTable::VariableTable() : now_depth(0) {
   tables.push_back(new table_t);
 }
 
-SymbolTable::~SymbolTable() {
+VariableTable::~VariableTable() {
 
   while (!tables.empty()) {
     delete tables.back();
@@ -26,7 +26,7 @@ SymbolTable::~SymbolTable() {
  * @return  var's value
  * @brief  Get a var from symbol table. Search top level firstly, if not found, search secound level.
  */
-int SymbolTable::GetInt(const std::string key) {
+int VariableTable::GetInt(const std::string key) {
   int result = 0;
 
   size_t pos = tables.size() - (now_depth + 1);
@@ -48,7 +48,7 @@ int SymbolTable::GetInt(const std::string key) {
  * @brief  Set a var from symbol table. Search now level firstly, if not found, search lower level.
  *         If can't found it in whole table, then set a new var at the now level
  */
-void SymbolTable::SetInt(const std::string key, const int val) {
+void VariableTable::SetInt(const std::string key, const int val) {
   size_t pos = tables.size() - (now_depth + 1);
 
   for (auto iter = tables.rbegin() + pos; iter != tables.rend(); iter++) {
@@ -68,7 +68,7 @@ void SymbolTable::SetInt(const std::string key, const int val) {
  * @param val var's value
  * @brief  Define a var from symbol table.
  */
-void SymbolTable::NewInt(const std::string key, const int val) {
+void VariableTable::NewInt(const std::string key, const int val) {
   table_t &table = *tables[now_depth];
 
   table[key] = val;
@@ -77,7 +77,7 @@ void SymbolTable::NewInt(const std::string key, const int val) {
 /**
  * @brief  Set a new level
  */
-void SymbolTable::PushLevel() {
+void VariableTable::PushLevel() {
   tables.push_back(new table_t);
   if (now_depth == tables.size() - 2) {
     now_depth = tables.size() - 1;
@@ -87,7 +87,7 @@ void SymbolTable::PushLevel() {
 /**
  * @brief  Destroy the top level
  */
-void SymbolTable::PopLevel() {
+void VariableTable::PopLevel() {
   if (tables.size() == 1) {
     return;
   }
@@ -102,7 +102,7 @@ void SymbolTable::PopLevel() {
 /**
  * @brief  Point to a higher level. If now level is the highest, then set a new one and point to it.
  */
-void SymbolTable::EnterLevel() {
+void VariableTable::EnterLevel() {
   if (now_depth + 1 == tables.size()) {
     tables.push_back(new table_t);
   }
@@ -113,7 +113,7 @@ void SymbolTable::EnterLevel() {
 /**
  * @brief  Point to a lower level.
  */
-void SymbolTable::LeaveLevel() {
+void VariableTable::LeaveLevel() {
   if (!now_depth) {
     return;
   }
@@ -124,14 +124,14 @@ void SymbolTable::LeaveLevel() {
 /**
  * @brief  Destroy all level which higher than now level.
  */
-void SymbolTable::PopToNowLevel() {
+void VariableTable::PopToNowLevel() {
   while (now_depth < tables.size() - 1) {
     delete tables.back();
     tables.pop_back();
   }
 }
 
-void SymbolTable::Print() {
+void VariableTable::Print() {
   cout << "-----Table Begin-----" << endl;
   cout << "table size: " << tables.size() << ", now depth: " << now_depth << endl;
   int depth = 0;
