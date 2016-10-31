@@ -8,7 +8,7 @@ include_directories(src/)
 
 file(GLOB Sources src/*.cc src/*.h common/*.h)
 
-add_executable(main ${Sources})
+add_executable(SeedCup2016.exe ${Sources})
 
 
 
