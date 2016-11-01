@@ -27,7 +27,9 @@ echo 'test compiling...'
 cd $src
 cmake .
 make
-./main
+./SeedCup2016.exe
+cp ./SeedCup2016.exe ../Bin
+cp ./input.txt ../Bin
 ./clean.sh
 cd $origin_root
 
