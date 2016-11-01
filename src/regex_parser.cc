@@ -113,10 +113,12 @@ NFAComponent *RegexParser::ParseBasic(const char *&p) {
   NFAComponent *result{nullptr};
 
   switch (*p) {
-    case '(':result = ParseGroup(p);
+    case '(':
+      result = ParseGroup(p);
       break;
 
-    case '[':result = ParseSet(p);
+    case '[':
+      result = ParseSet(p);
       break;
 
     case '.': {
@@ -127,7 +129,8 @@ NFAComponent *RegexParser::ParseBasic(const char *&p) {
     }
       break;
 
-    case '\\':result = ParseEscape(p);
+    case '\\':
+      result = ParseEscape(p);
       break;
 
     default:
@@ -138,18 +141,22 @@ NFAComponent *RegexParser::ParseBasic(const char *&p) {
   }
 
   switch (*p) {
-    case '*':result = nfa_manager_->KleenStar(result);
+    case '*':
+      result = nfa_manager_->KleenStar(result);
       p += 1;
       break;
 
-    case '+':result = nfa_manager_->LeastOne(result);
+    case '+':
+      result = nfa_manager_->LeastOne(result);
       p += 1;
       break;
 
-    case '?':result = nfa_manager_->Optional(result);
+    case '?':
+      result = nfa_manager_->Optional(result);
       p += 1;
 
-    default:break;
+    default:
+      break;
   }
 
   return result;
@@ -196,10 +203,12 @@ NFAComponent *RegexParser::ParseEscape(const char *&p) {
     case ')':
     case '[':
     case ']':
-    case '|':result = nfa_manager_->CreateCompFromChar(*p);
+    case '|':
+      result = nfa_manager_->CreateCompFromChar(*p);
       break;
 
-    case 'd':result = nfa_manager_->CreateCompFromRange('0', '9' + 1);
+    case 'd':
+      result = nfa_manager_->CreateCompFromRange('0', '9' + 1);
       break;
 
     case 'D': {
@@ -209,7 +218,8 @@ NFAComponent *RegexParser::ParseEscape(const char *&p) {
     }
       break;
 
-    case 's':result = nfa_manager_->CreateCompFromString(" \f\n\r\t\v");
+    case 's':
+      result = nfa_manager_->CreateCompFromString(" \f\n\r\t\v");
       break;
 
     case 'S': {

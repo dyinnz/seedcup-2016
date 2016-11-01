@@ -3,7 +3,6 @@
 //
 
 #include <cstdlib>
-#include <stdlib.h>
 #include <string.h>
 #include <string>
 #include <fstream>
@@ -31,15 +30,16 @@ void ClikeInterpreter::Exec() {
  * @brief Interpret a single line
  */
 int ClikeInterpreter::ExecSingle(AstNode *node) {
-  static std::unordered_set<Symbol> expr_head = {   //Node types of beginning of expression
-    kInc, kDec,
-    kAdd, kSub, kMul, kDiv, kAssign,
-    kEQ, kNE, kGE, kGT, kLE, kLT,
-    kNumber, kIdentifier, kComma
+  static std::unordered_set<Symbol>
+      expr_head = {   //Node types of beginning of expression
+      kInc, kDec,
+      kAdd, kSub, kMul, kDiv, kAssign,
+      kEQ, kNE, kGE, kGT, kLE, kLT,
+      kNumber, kIdentifier, kComma
   };
 
-
-  if (expr_head.find(node->symbol()) != expr_head.end()) {    //If this node means an expression
+  if (expr_head.find(node->symbol())
+      != expr_head.end()) {    //If this node means an expression
     return EvalExpr(node);
   }
 
@@ -48,25 +48,31 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
       // empty statement
       break;
 
-    case kBlockID:ExecBlock(node);
+    case kBlockID:
+      ExecBlock(node);
       break;
 
-    case kIntID:ExecTypeHead(node);
+    case kIntID:
+      ExecTypeHead(node);
       break;
 
     case kPrintfID:
       return ExecPrintf(node);
 
-    case kIfRootID:ExecIfRoot(node);
+    case kIfRootID:
+      ExecIfRoot(node);
       break;
 
-    case kForID:ExecFor(node);
+    case kForID:
+      ExecFor(node);
       break;
 
-    case kWhileID:ExecWhile(node);
+    case kWhileID:
+      ExecWhile(node);
       break;
 
-    case kDoID:ExecDoWhile(node);
+    case kDoID:
+      ExecDoWhile(node);
       break;
 
     case kBreakID:
@@ -75,10 +81,12 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
       break;
 
     case kIfID:
-    case kElseID:func_error(logger, "illegal node: {}", node->to_string());
+    case kElseID:
+      func_error(logger, "illegal node: {}", node->to_string());
       break;
 
-    default:func_error(logger, "unrecognized node: {}", node->to_string());
+    default:
+      func_error(logger, "unrecognized node: {}", node->to_string());
   }
 
   return 0;
@@ -152,7 +160,8 @@ int ClikeInterpreter::EvalExpr(AstNode *node) {
     case kIdentifierID:
       return table_.GetInt(node->text());
 
-    case kCommaID:EvalExpr(node->children().front());
+    case kCommaID:
+      EvalExpr(node->children().front());
       return EvalExpr(node->children().back());
 
     case kAssignID: {
@@ -229,7 +238,8 @@ int ClikeInterpreter::EvalExpr(AstNode *node) {
     case kPrintfID:
       return ExecPrintf(node);
 
-    default:func_error(logger, "illegal node: {}", node->to_string());
+    default:
+      func_error(logger, "illegal node: {}", node->to_string());
       return 0;
   }
 }
@@ -271,7 +281,8 @@ int ClikeInterpreter::ExecPrintf(AstNode *node) {
     text += raw_text[i];
   }
 
-  auto result = text.length(); // Get the length of the string ready to print. It's the return value of std::printf
+  auto result =
+      text.length(); // Get the length of the string ready to print. It's the return value of std::printf
 
   // Handle expression in the node of Printf
   recordLine(node);
@@ -295,11 +306,13 @@ void ClikeInterpreter::ExecIfRoot(AstNode *node) {
       if (ExecIfClause(clause)) {
         break;
       }
-    } else if (clause ->symbol() == kElse) {
+    } else if (clause->symbol() == kElse) {
       ExecElseClause(clause);
       break;
     } else {
-      func_error(logger, "illegal node: {}, expect kIf or kElse", node->to_string());
+      func_error(logger,
+                 "illegal node: {}, expect kIf or kElse",
+                 node->to_string());
     }
 
   }
@@ -324,7 +337,7 @@ int ClikeInterpreter::ExecIfClause(AstNode *node) {
   if (result) {
     ExecSingle(body);
   }
-   return result;
+  return result;
 }
 
 /**
@@ -356,7 +369,9 @@ void ClikeInterpreter::ExecFor(AstNode *node) {
   recordLine(node);
 
   table_.PushLevel();   // Push a new variable table level for var definition in init statement of For
-  for (ExecSingle(init); ExecSingle(condition) || condition->symbol() == kSemicolon; ExecSingle(step)) {
+  for (ExecSingle(init);
+       ExecSingle(condition) || condition->symbol() == kSemicolon;
+       ExecSingle(step)) {
     if (body->symbol() == kBlock) {
       ExecLoopBlock(body);
     } else {
@@ -369,7 +384,8 @@ void ClikeInterpreter::ExecFor(AstNode *node) {
     }
   }
 
-  if (body->symbol() == kBlock) { // if it got out from a loop block, delete all higher level
+  if (body->symbol()
+      == kBlock) { // if it got out from a loop block, delete all higher level
     table_.PopToNowLevel();
   }
   table_.PopLevel();  // Delete level for var in init statement
@@ -400,7 +416,8 @@ void ClikeInterpreter::ExecWhile(AstNode *node) {
     }
   }
 
-  if (body->symbol() == kBlock) { // if it got out from a loop block, delete all higher level
+  if (body->symbol()
+      == kBlock) { // if it got out from a loop block, delete all higher level
     table_.PopToNowLevel();
   }
 }
@@ -430,7 +447,8 @@ void ClikeInterpreter::ExecDoWhile(AstNode *node) {
     }
   } while (ExecSingle(condition));
 
-  if (body->symbol() == kBlock) { // if it got out from a loop block, delete all higher level
+  if (body->symbol()
+      == kBlock) { // if it got out from a loop block, delete all higher level
     table_.PopToNowLevel();
   }
 }
@@ -456,7 +474,10 @@ void ClikeInterpreter::OutputLines(const char *filename) {
  */
 void ClikeInterpreter::recordLine(AstNode *node) {
   if (last_line_ != node->row()) {
-    func_log(logger, "now running line {}: node {}", node->row(), node->to_string());
+    func_log(logger,
+             "now running line {}: node {}",
+             node->row(),
+             node->to_string());
     run_lines_.push_back(node->row());
     last_line_ = node->row();
   }

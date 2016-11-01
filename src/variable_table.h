@@ -12,33 +12,33 @@
 
 namespace symbol_table {
 
-  class VariableTable {
-  public:
-    VariableTable();
+class VariableTable {
+ public:
+  VariableTable();
 
-    ~VariableTable();
+  ~VariableTable();
 
-    int GetInt(const std::string key);
-    void SetInt(const std::string key, const int val);
-    void NewInt(const std::string key, const int val = 0xEEEEEEEE);
+  int GetInt(const std::string key);
+  void SetInt(const std::string key, const int val);
+  void NewInt(const std::string key, const int val = 0xEEEEEEEE);
 
-    void PushLevel();
-    void PopLevel();
+  void PushLevel();
+  void PopLevel();
 
-    void EnterLevel();
-    void LeaveLevel();
+  void EnterLevel();
+  void LeaveLevel();
 
-    void PopToNowLevel();
+  void PopToNowLevel();
 
-    void Print();
+  void Print();
 
-  public:
-    typedef std::unordered_map<std::string, int> table_t;
+ public:
+  typedef std::unordered_map<std::string, int> table_t;
 
-  private:
-    std::vector<table_t*> tables;
-    std::size_t  now_depth;
-  };
+ private:
+  std::vector<table_t *> tables;
+  std::size_t now_depth;
+};
 
 }
 

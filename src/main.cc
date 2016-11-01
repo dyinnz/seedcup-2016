@@ -56,7 +56,7 @@ int main() {
   // split source string to tokens
   auto tokenizer = clike_grammar::BuilderClikeTokenizer();
   vector<Token> tokens;
-  auto result = tokenizer.LexicalAnalyze(data, data+size, tokens);
+  auto result = tokenizer.LexicalAnalyze(data, data + size, tokens);
   if (!result) {
     return -1;
   }

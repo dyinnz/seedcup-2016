@@ -18,6 +18,6 @@ void PrintAstNode(AstNode *node, int deep) {
   std::cout << node->to_string() << std::endl;
 
   for (auto child : node->children()) {
-    PrintAstNode(child, deep+1);
+    PrintAstNode(child, deep + 1);
   }
 }

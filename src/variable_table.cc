@@ -133,11 +133,12 @@ void VariableTable::PopToNowLevel() {
 
 void VariableTable::Print() {
   cout << "-----Table Begin-----" << endl;
-  cout << "table size: " << tables.size() << ", now depth: " << now_depth << endl;
+  cout << "table size: " << tables.size() << ", now depth: " << now_depth
+       << endl;
   int depth = 0;
   for (auto table : tables) {
     for (auto keyval : *table) {
-      for (int i = 0; i < depth; i++){
+      for (int i = 0; i < depth; i++) {
         cout << "\t";
       }
       cout << "|" << keyval.first << ": " << keyval.second << endl;

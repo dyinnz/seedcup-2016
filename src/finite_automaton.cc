@@ -486,15 +486,20 @@ string to_string(const Node &node) {
   string s{"("};
   s += std::to_string(node.number());
   switch (node.state()) {
-    case Node::kStart:s += ":start";
+    case Node::kStart:
+      s += ":start";
       break;
-    case Node::kEnd:s += ":end";
+    case Node::kEnd:
+      s += ":end";
       break;
-    case Node::kStartEnd:s += ":start/end";
+    case Node::kStartEnd:
+      s += ":start/end";
       break;
-    case Node::kNormal:s += ":normal";
+    case Node::kNormal:
+      s += ":normal";
       break;
-    default:break;
+    default:
+      break;
   }
   if (node.IsEnd()) {
     s += ':';

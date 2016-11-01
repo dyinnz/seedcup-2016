@@ -61,7 +61,6 @@ TERMINAL(kNE) // !=
 NON_TERMINAL(kBlock)
 NON_TERMINAL(kIfRoot)
 
-
 /**
  * @see clike_grammar.h
  */
@@ -71,7 +70,7 @@ Tokenizer BuilderClikeTokenizer() {
   builder
       .SetLineComment("//")
       .SetBlockComment("/*", "*/")
-      /* Ingore all space symbol and LF */
+          /* Ingore all space symbol and LF */
       .SetIgnoreSet({kSpaceSymbol, kLFSymbol});
 
   builder.SetPatterns(
@@ -114,7 +113,8 @@ Tokenizer BuilderClikeTokenizer() {
           {">", kGT},
 
           // ID & literal
-          {R"((\d+)|(0(x|X)[a-f|A-F]+))", kNumber},  //TODO Hex Number (0xabcdef)
+          {R"((\d+)|(0(x|X)[a-f|A-F]+))",
+           kNumber},  //TODO Hex Number (0xabcdef)
           {R"("([^"]|\\")*")", kString},
           {R"(\w(\w|\d)*)", kIdentifier},
       }
