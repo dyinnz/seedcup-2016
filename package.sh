@@ -17,8 +17,7 @@ cp -r ./src $src/
 cp -r ./common $src/
 rm $src/common/catch.hpp
 
-cp -r ./README.md $doc/
-cp -r ./README.pdf $doc/
+cp -r ./doc/* $doc/
 
 head -n 15 ./CMakeLists.txt > $src/CMakeLists.txt
 cp -r ./clean.sh $src/

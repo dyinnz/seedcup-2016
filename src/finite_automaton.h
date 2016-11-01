@@ -5,6 +5,14 @@
  * Date:   2016-08-25
  ******************************************************************************/
 
+/**
+ * This is the core part of regular expression engine. NFA, DFA and etc. is
+ * implemented in this header and corresponding sources file.
+ *
+ * Theses finit automaton has benn optimized for tokenizer, could solve some
+ * conficts when converting NFA to DFA if setting the priority correctly.
+ */
+
 #pragma once
 
 #include <climits>
@@ -22,8 +30,6 @@
 
 #include "utility.h"
 #include "mem_manager.h"
-
-/*----------------------------------------------------------------------------*/
 
 namespace regular_expression {
 
@@ -50,7 +56,7 @@ class NumberSet;
 class DFA;
 
 /**
- * type definition
+ * type definition, some memory manager.
  */
 typedef SmallObjPool<NFAEdge> NFAEdgeManager;
 typedef SmallObjPool<NFANode> NFANodeManager;
