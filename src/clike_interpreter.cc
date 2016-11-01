@@ -31,7 +31,7 @@ void ClikeInterpreter::Exec() {
  * @brief Interpret a single line
  */
 int ClikeInterpreter::ExecSingle(AstNode *node) {
-  static std::unordered_set<Symbol> expr_head = {
+  static std::unordered_set<Symbol> expr_head = {   //Node types of beginning of expression
     kInc, kDec,
     kAdd, kSub, kMul, kDiv, kAssign,
     kEQ, kNE, kGE, kGT, kLE, kLT,
@@ -39,12 +39,11 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
   };
 
 
-  if (expr_head.find(node->symbol()) != expr_head.end()) {
+  if (expr_head.find(node->symbol()) != expr_head.end()) {    //If this node means an expression
     return EvalExpr(node);
   }
 
-  int result = 0;
-  switch (node->symbol().ID()) {
+  switch (node->symbol().ID()) {    //Other statement node, call its handle function
     case kSemicolonID:
       // empty statement
       break;
@@ -55,8 +54,8 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
     case kIntID:ExecTypeHead(node);
       break;
 
-    case kPrintfID:result = ExecPrintf(node);
-      break;
+    case kPrintfID:
+      return ExecPrintf(node);
 
     case kIfRootID:ExecIfRoot(node);
       break;
@@ -70,9 +69,6 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
     case kDoID:ExecDoWhile(node);
       break;
 
-//  case kAssignID:result = ExecAssign(node);
-//    break;
-
     case kBreakID:
       is_break_ = true;
       recordLine(node);
@@ -85,7 +81,7 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
     default:func_error(logger, "unrecognized node: {}", node->to_string());
   }
 
-  return result;
+  return 0;
 }
 
 /**
@@ -93,14 +89,14 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
  * @brief Interpret a block of code
  */
 void ClikeInterpreter::ExecBlock(AstNode *node) {
-  table_.PushLevel();
+  table_.PushLevel();     //needs a new variable table level when entering a statement block
   for (auto child : node->children()) {
     ExecSingle(child);
     if (is_break_) {
       break;
     }
   }
-  table_.PopLevel();
+  table_.PopLevel();    //return to lower level and delete the top one
 }
 
 /**
@@ -108,14 +104,14 @@ void ClikeInterpreter::ExecBlock(AstNode *node) {
  * @brief Interpret a block of code of a loop struct
  */
 void ClikeInterpreter::ExecLoopBlock(AstNode *node) {
-  table_.EnterLevel();
+  table_.EnterLevel();  //just raise a level instead push a new one, maybe it is running for second time
   for (auto child : node->children()) {
     ExecSingle(child);
     if (is_break_) {
       break;
     }
   }
-  table_.LeaveLevel();
+  table_.LeaveLevel();  //just leave this level instead of delete one for next time get in it
 }
 
 /**
@@ -125,10 +121,10 @@ void ClikeInterpreter::ExecLoopBlock(AstNode *node) {
 void ClikeInterpreter::ExecTypeHead(AstNode *node) {
   for (auto child : node->children()) {
     if (kIdentifier == child->symbol()) {
-      table_.NewInt(child->text());
+      table_.NewInt(child->text());     // Just define a var
       continue;
 
-    } else if (kAssign == child->symbol()) {
+    } else if (kAssign == child->symbol()) {  //Define and init a new var
       auto id_node = child->children().front();
       auto expr = child->children().back();
       auto result = EvalExpr(expr);
@@ -148,14 +144,10 @@ void ClikeInterpreter::ExecTypeHead(AstNode *node) {
  * @brief Interpret a expr
  */
 int ClikeInterpreter::EvalExpr(AstNode *node) {
-  int result;
   recordLine(node);
   switch (node->symbol().ID()) {
     case kNumberID:
-      func_debug(logger, "Number's string is: {}", node->text());
-      result = stoi(node->text(), 0, 0);
-      func_debug(logger, "Number is: {}", result);
-      return result;
+      return stoi(node->text(), 0, 0);
 
     case kIdentifierID:
       return table_.GetInt(node->text());
@@ -253,6 +245,7 @@ int ClikeInterpreter::ExecPrintf(AstNode *node) {
 
   std::string text = "";
 
+  // Handle escape char
   for (size_t i = 1; i < raw_text.length() - 1; i++) {
     if (raw_text[i] == '\\') {
       i++;
@@ -260,6 +253,7 @@ int ClikeInterpreter::ExecPrintf(AstNode *node) {
       continue;
     }
 
+    // Handle parameter of printf for print
     if (raw_text[i] == '%') {
       if (raw_text[i + 1] == '%') {
         i++;
@@ -277,10 +271,9 @@ int ClikeInterpreter::ExecPrintf(AstNode *node) {
     text += raw_text[i];
   }
 
-  auto result = text.length();
+  auto result = text.length(); // Get the length of the string ready to print. It's the return value of std::printf
 
-  // TODO: I have added next line for
-  // that there is no expression in the node of Printf
+  // Handle expression in the node of Printf
   recordLine(node);
   for (auto child : node->children()) {
     EvalExpr(child);
@@ -362,7 +355,7 @@ void ClikeInterpreter::ExecFor(AstNode *node) {
 
   recordLine(node);
 
-  table_.PushLevel();
+  table_.PushLevel();   // Push a new variable table level for var definition in init statement of For
   for (ExecSingle(init); ExecSingle(condition) || condition->symbol() == kSemicolon; ExecSingle(step)) {
     if (body->symbol() == kBlock) {
       ExecLoopBlock(body);
@@ -376,10 +369,10 @@ void ClikeInterpreter::ExecFor(AstNode *node) {
     }
   }
 
-  if (body->symbol() == kBlock) {
+  if (body->symbol() == kBlock) { // if it got out from a loop block, delete all higher level
     table_.PopToNowLevel();
   }
-  table_.PopLevel();
+  table_.PopLevel();  // Delete level for var in init statement
 }
 
 /**
@@ -407,7 +400,7 @@ void ClikeInterpreter::ExecWhile(AstNode *node) {
     }
   }
 
-  if (body->symbol() == kBlock) {
+  if (body->symbol() == kBlock) { // if it got out from a loop block, delete all higher level
     table_.PopToNowLevel();
   }
 }
@@ -437,7 +430,7 @@ void ClikeInterpreter::ExecDoWhile(AstNode *node) {
     }
   } while (ExecSingle(condition));
 
-  if (body->symbol() == kBlock) {
+  if (body->symbol() == kBlock) { // if it got out from a loop block, delete all higher level
     table_.PopToNowLevel();
   }
 }

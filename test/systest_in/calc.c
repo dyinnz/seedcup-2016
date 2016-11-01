@@ -1,5 +1,6 @@
 //#include <stdio.h>
 //int main() {
+int x;
 int a, b, c;printf("%d ", __LINE__);
 
 a = b = c = 0xFf;printf("%d ", __LINE__);
