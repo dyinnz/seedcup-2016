@@ -17,7 +17,7 @@
 namespace regular_expression {
 
 /**
- * @brief Regular Expression Parser
+ * @brief Regular Expression Parser, optimized for tokenizing
  */
 class RegexParser {
  public:
@@ -40,6 +40,12 @@ class RegexParser {
 
   std::shared_ptr<DFA> ParseToDFA(const std::string &s);
 
+  /**
+   * @brief     In order to build a tokenizer, should not construct DFA
+   *            directly. Only construct a simple NFA compoment, let caller to
+   *            complete the rest construction and convertion.
+   * @return    a NFA compoment
+   */
   NFAComponent *ParseToNFAComponent(const char *beg, const char *end);
 
   NFAComponent *ParseToNFAComponent(const std::string &s);
