@@ -1,0 +1,1346 @@
+run systest on loop_6
+[DEBUG]  
+//#include <stdio.h>
+//int main() {
+  int a, b = 1;printf("%d ", __LINE__);
+
+  for (a = printf("\\\"\"\'%%%d", 010); printf("%d ", __LINE__),a; a = a - printf(" ")) {
+    int a = -1;printf("%d ", __LINE__);
+    while (b) {printf("%d ", __LINE__);
+      printf("%d ", __LINE__);break;
+    }
+  }
+//}
+
+[DEBUG]  Token { P(3,2), Int, int }
+[DEBUG]  Token { P(3,6), Identifier, a }
+[DEBUG]  Token { P(3,7), Comma, , }
+[DEBUG]  Token { P(3,9), Identifier, b }
+[DEBUG]  Token { P(3,11), Assign, = }
+[DEBUG]  Token { P(3,13), Number, 1 }
+[DEBUG]  Token { P(3,14), Semicolon, ; }
+[DEBUG]  Token { P(3,15), Printf, printf }
+[DEBUG]  Token { P(3,21), LeftParen, ( }
+[DEBUG]  Token { P(3,22), String, "%d " }
+[DEBUG]  Token { P(3,27), Comma, , }
+[DEBUG]  Token { P(3,29), Identifier, __LINE__ }
+[DEBUG]  Token { P(3,37), RightParen, ) }
+[DEBUG]  Token { P(3,38), Semicolon, ; }
+[DEBUG]  Token { P(5,2), For, for }
+[DEBUG]  Token { P(5,6), LeftParen, ( }
+[DEBUG]  Token { P(5,7), Identifier, a }
+[DEBUG]  Token { P(5,9), Assign, = }
+[DEBUG]  Token { P(5,11), Printf, printf }
+[DEBUG]  Token { P(5,17), LeftParen, ( }
+[DEBUG]  Token { P(5,18), String, "\\\"\"\'%%%d" }
+[DEBUG]  Token { P(5,32), Comma, , }
+[DEBUG]  Token { P(5,34), Number, 010 }
+[DEBUG]  Token { P(5,37), RightParen, ) }
+[DEBUG]  Token { P(5,38), Semicolon, ; }
+[DEBUG]  Token { P(5,40), Printf, printf }
+[DEBUG]  Token { P(5,46), LeftParen, ( }
+[DEBUG]  Token { P(5,47), String, "%d " }
+[DEBUG]  Token { P(5,52), Comma, , }
+[DEBUG]  Token { P(5,54), Identifier, __LINE__ }
+[DEBUG]  Token { P(5,62), RightParen, ) }
+[DEBUG]  Token { P(5,63), Comma, , }
+[DEBUG]  Token { P(5,64), Identifier, a }
+[DEBUG]  Token { P(5,65), Semicolon, ; }
+[DEBUG]  Token { P(5,67), Identifier, a }
+[DEBUG]  Token { P(5,69), Assign, = }
+[DEBUG]  Token { P(5,71), Identifier, a }
+[DEBUG]  Token { P(5,73), Sub, - }
+[DEBUG]  Token { P(5,75), Printf, printf }
+[DEBUG]  Token { P(5,81), LeftParen, ( }
+[DEBUG]  Token { P(5,82), String, " " }
+[DEBUG]  Token { P(5,85), RightParen, ) }
+[DEBUG]  Token { P(5,86), RightParen, ) }
+[DEBUG]  Token { P(5,88), LeftBrace, { }
+[DEBUG]  Token { P(6,4), Int, int }
+[DEBUG]  Token { P(6,8), Identifier, a }
+[DEBUG]  Token { P(6,10), Assign, = }
+[DEBUG]  Token { P(6,12), Sub, - }
+[DEBUG]  Token { P(6,13), Number, 1 }
+[DEBUG]  Token { P(6,14), Semicolon, ; }
+[DEBUG]  Token { P(6,15), Printf, printf }
+[DEBUG]  Token { P(6,21), LeftParen, ( }
+[DEBUG]  Token { P(6,22), String, "%d " }
+[DEBUG]  Token { P(6,27), Comma, , }
+[DEBUG]  Token { P(6,29), Identifier, __LINE__ }
+[DEBUG]  Token { P(6,37), RightParen, ) }
+[DEBUG]  Token { P(6,38), Semicolon, ; }
+[DEBUG]  Token { P(7,4), While, while }
+[DEBUG]  Token { P(7,10), LeftParen, ( }
+[DEBUG]  Token { P(7,11), Identifier, b }
+[DEBUG]  Token { P(7,12), RightParen, ) }
+[DEBUG]  Token { P(7,14), LeftBrace, { }
+[DEBUG]  Token { P(7,15), Printf, printf }
+[DEBUG]  Token { P(7,21), LeftParen, ( }
+[DEBUG]  Token { P(7,22), String, "%d " }
+[DEBUG]  Token { P(7,27), Comma, , }
+[DEBUG]  Token { P(7,29), Identifier, __LINE__ }
+[DEBUG]  Token { P(7,37), RightParen, ) }
+[DEBUG]  Token { P(7,38), Semicolon, ; }
+[DEBUG]  Token { P(8,6), Printf, printf }
+[DEBUG]  Token { P(8,12), LeftParen, ( }
+[DEBUG]  Token { P(8,13), String, "%d " }
+[DEBUG]  Token { P(8,18), Comma, , }
+[DEBUG]  Token { P(8,20), Identifier, __LINE__ }
+[DEBUG]  Token { P(8,28), RightParen, ) }
+[DEBUG]  Token { P(8,29), Semicolon, ; }
+[DEBUG]  Token { P(8,30), Break, break }
+[DEBUG]  Token { P(8,35), Semicolon, ; }
+[DEBUG]  Token { P(9,4), RightBrace, } }
+[DEBUG]  Token { P(10,2), RightBrace, } }
+[NOTICE] L428:ParseExpr() expect +, -, (, id, number Token { P(3,15), Printf, printf }
+[NOTICE] L428:ParseExpr() expect +, -, (, id, number Token { P(5,40), Printf, printf }
+[NOTICE] L428:ParseExpr() expect +, -, (, id, number Token { P(6,15), Printf, printf }
+[NOTICE] L428:ParseExpr() expect +, -, (, id, number Token { P(7,15), Printf, printf }
+[NOTICE] L428:ParseExpr() expect +, -, (, id, number Token { P(8,6), Printf, printf }
+Node/NT { Block }
+    Node/T { P(3,2), Int, int}
+        Node/T { P(3,6), Identifier, a}
+        Node/T { P(3,11), Assign, =}
+            Node/T { P(3,9), Identifier, b}
+            Node/T { P(3,13), Number, 1}
+    Node/T { P(3,15), Printf, printf}
+        Node/T { P(3,22), String, "%d "}
+        Node/T { P(3,29), Identifier, __LINE__}
+    Node/T { P(5,2), For, for}
+        Node/T { P(5,9), Assign, =}
+            Node/T { P(5,7), Identifier, a}
+            Node/T { P(5,11), Printf, printf}
+                Node/T { P(5,18), String, "\\\"\"\'%%%d"}
+                Node/T { P(5,34), Number, 010}
+        Node/T { P(5,63), Comma, ,}
+            Node/T { P(5,40), Printf, printf}
+                Node/T { P(5,47), String, "%d "}
+                Node/T { P(5,54), Identifier, __LINE__}
+            Node/T { P(5,64), Identifier, a}
+        Node/T { P(5,69), Assign, =}
+            Node/T { P(5,67), Identifier, a}
+            Node/T { P(5,73), Sub, -}
+                Node/T { P(5,71), Identifier, a}
+                Node/T { P(5,75), Printf, printf}
+                    Node/T { P(5,82), String, " "}
+        Node/NT { Block }
+            Node/T { P(6,4), Int, int}
+                Node/T { P(6,10), Assign, =}
+                    Node/T { P(6,8), Identifier, a}
+                    Node/T { P(6,12), Sub, -}
+                        Node/T { P(6,13), Number, 1}
+            Node/T { P(6,15), Printf, printf}
+                Node/T { P(6,22), String, "%d "}
+                Node/T { P(6,29), Identifier, __LINE__}
+            Node/T { P(7,4), While, while}
+                Node/T { P(7,11), Identifier, b}
+                Node/NT { Block }
+                    Node/T { P(7,15), Printf, printf}
+                        Node/T { P(7,22), String, "%d "}
+                        Node/T { P(7,29), Identifier, __LINE__}
+                    Node/T { P(8,6), Printf, printf}
+                        Node/T { P(8,13), String, "%d "}
+                        Node/T { P(8,20), Identifier, __LINE__}
+                    Node/T { P(8,30), Break, break}
+[LOG]    L480:recordLine() now running line 3: node Node/T { P(3,13), Number, 1}
+-----Table Begin-----
+table size: 2, now depth: 1
+	|a: -286331154
+-----Table End-----
+[DEBUG]  L141:ExecTypeHead() name: b, value: 1
+-----Table Begin-----
+table size: 2, now depth: 1
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 2, now depth: 1
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 2, now depth: 1
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 2, now depth: 1
+	|b: 1
+	|a: -286331154
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 5: node Node/T { P(5,2), For, for}
+-----Table Begin-----
+table size: 2, now depth: 1
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: -286331154
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: -286331154
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 6, val is \""'%8
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: 6
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: 6
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: 6
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: 6
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: 6
+-----Table End-----
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: 6
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 3, now depth: 2
+	|b: 1
+	|a: 6
+-----Table End-----
+[LOG]    L480:recordLine() now running line 6: node Node/T { P(6,12), Sub, -}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 6
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 6
+-----Table End-----
+[DEBUG]  L141:ExecTypeHead() name: a, value: -1
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 7: node Node/T { P(7,11), Identifier, b}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 8: node Node/T { P(8,20), Identifier, __LINE__}
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 5: node Node/T { P(5,69), Assign, =}
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 6
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 1, val is  
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 6: node Node/T { P(6,12), Sub, -}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[DEBUG]  L141:ExecTypeHead() name: a, value: -1
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 7: node Node/T { P(7,11), Identifier, b}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 8: node Node/T { P(8,20), Identifier, __LINE__}
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 5: node Node/T { P(5,69), Assign, =}
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 5
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 1, val is  
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 6: node Node/T { P(6,12), Sub, -}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[DEBUG]  L141:ExecTypeHead() name: a, value: -1
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 7: node Node/T { P(7,11), Identifier, b}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 8: node Node/T { P(8,20), Identifier, __LINE__}
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 5: node Node/T { P(5,69), Assign, =}
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 4
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 1, val is  
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 6: node Node/T { P(6,12), Sub, -}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[DEBUG]  L141:ExecTypeHead() name: a, value: -1
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 7: node Node/T { P(7,11), Identifier, b}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 8: node Node/T { P(8,20), Identifier, __LINE__}
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 5: node Node/T { P(5,69), Assign, =}
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 3
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 1, val is  
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 6: node Node/T { P(6,12), Sub, -}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[DEBUG]  L141:ExecTypeHead() name: a, value: -1
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 7: node Node/T { P(7,11), Identifier, b}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 8: node Node/T { P(8,20), Identifier, __LINE__}
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 5: node Node/T { P(5,69), Assign, =}
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 2
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 1, val is  
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 6: node Node/T { P(6,12), Sub, -}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[DEBUG]  L141:ExecTypeHead() name: a, value: -1
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 7: node Node/T { P(7,11), Identifier, b}
+-----Table Begin-----
+table size: 4, now depth: 3
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+[LOG]    L480:recordLine() now running line 8: node Node/T { P(8,20), Identifier, __LINE__}
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 5, now depth: 4
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[LOG]    L480:recordLine() now running line 5: node Node/T { P(5,69), Assign, =}
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 1
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 1, val is  
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 0
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 0
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 0
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 0
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 0
+			|a: -1
+-----Table End-----
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 0
+			|a: -1
+-----Table End-----
+[DEBUG]  L293:ExecPrintf() printf return 2, val is 0 
+-----Table Begin-----
+table size: 4, now depth: 2
+	|b: 1
+	|a: 0
+			|a: -1
+-----Table End-----
