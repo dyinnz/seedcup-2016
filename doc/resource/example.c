@@ -1,5 +1,5 @@
-#include <stdio.h>
-int main() {
+// #include <stdio.h>
+// int main() {
   // 支持printf 返回值
   int hello = printf("hello %d\n", 1024);
 
@@ -12,8 +12,9 @@ int main() {
   }
 
   // 支持任意的表达式嵌套
+  int b, c;
   int a = b = c = 1;
-  int comlex_expr = hello = world = 1 == 10 < -a++ * b - c, 999;
+  int comlex_expr = (hello = world = 1 == 10 < -a++ * b - c, 999);
 
   // 支持括号 和 括号嵌套
   int parentheses = ((3 + b) * (c > 9) , 999);
@@ -28,8 +29,8 @@ int main() {
           // 支持非赋值形式
           c--, b = 1;
         }
-      } while (a == b ++ + -c, false);
+      } while (a == b ++ + -c, 0);
       break;
     }
   }
-}
+// }

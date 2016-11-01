@@ -122,14 +122,18 @@ __简单说明：__
 ### 文档目录结构 ###
 
        Doc
-        ├── bnf-1.png
-        ├── bnf-2.png
-        ├── grammar_spec.xlsx
-        ├── README.md
-        └── README.pdf
+        ├── README.pdf
+        └── resource
+            ├── bnf-1.png
+            ├── bnf-2.png
+            ├── example.c
+            ├── grammar_spec.xlsx
+            ├── interpreter.png
+            └── README.md
 
 __简单说明：__
-包含了若干文档资料，其中README.pdf为主要的文档。
++ README.pdf， 程序文档
++ resource文件夹 构建README.pdf的必要资料
 
 ### 3. 程序结构 ##
 
@@ -212,7 +216,7 @@ __简单说明：__
 
 ## 五 程序逻辑 ##
 
-### 大致流程 ###
+### 主体流程 ###
 ```
                    +------------------+
                    | TokenizerBuilder |
@@ -245,10 +249,10 @@ __简单说明：__
 + 基于AST的代码解释执行
 
     解释器：传入一棵抽象语法树，使用深度优先算法，遍历整棵抽象语法树，对树上的各个节点进行解释执行。每一种节点基本对应代码中的一个函数实现，函数内部的算法逻辑基本借用C语言本身的逻辑实现，达到减少bug和代码量，增强可读性的目的。对于无法借用的printf函数调用，则手动实现其逻辑，达到等效的效果。
+    
     变量表：使用std::unordered_map实现一个作用域内变量的快速添加和查找，利用std::vector实现了变量作用域的分级。
     
-
-### 流程图 ###
+    ![解释器流程图][3]
 
 
 ## 七 附录：支持的代码示例 ##
@@ -266,8 +270,9 @@ __简单说明：__
   }
 
   // 支持任意的表达式嵌套
+  int b, c;
   int a = b = c = 1;
-  int comlex_expr = hello = world = 1 == 10 < -a++ * b - c, 999;
+  int comlex_expr = (hello = world = 1 == 10 < -a++ * b - c, 999);
 
   // 支持括号 和 括号嵌套
   int parentheses = ((3 + b) * (c > 9) , 999);
@@ -282,7 +287,7 @@ __简单说明：__
           // 支持非赋值形式
           c--, b = 1;
         }
-      } while (a == b ++ + -c, false);
+      } while (a == b ++ + -c, 0);
       break;
     }
   }
@@ -307,3 +312,4 @@ __简单说明：__
 
 [1]: bnf-1.png
 [2]: bnf-2.png
+[3]: interpreter.png
