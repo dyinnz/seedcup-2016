@@ -132,6 +132,7 @@ void VariableTable::PopToNowLevel() {
 }
 
 void VariableTable::Print() {
+  /*
   cout << "-----Table Begin-----" << endl;
   cout << "table size: " << tables.size() << ", now depth: " << now_depth
        << endl;
@@ -146,5 +147,6 @@ void VariableTable::Print() {
     depth++;
   }
   cout << "-----Table End-----" << endl;
+  */
 }
 

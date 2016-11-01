@@ -16,8 +16,6 @@
 #include <sstream>
 #include <string>
 
-#define DEBUG
-
 namespace simple_logger {
 
 /**

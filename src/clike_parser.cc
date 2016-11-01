@@ -26,7 +26,7 @@ Ast ClikeParser::Parse(std::vector<Token> &tokens) {
   auto block = ParseBlockBody(p);
 
   // for debugging
-  PrintAstNode(block);
+  // PrintAstNode(block);
 
   // set the root and
   ast_.set_root(block);

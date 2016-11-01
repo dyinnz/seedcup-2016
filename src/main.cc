@@ -49,7 +49,7 @@ static const char *kOutputFilename = "output.txt";
 
 int main() {
   GET_FILE_DATA_SAFELY(data, size, kInputFilename);
-  logger.set_log_level(kDebug);
+  logger.set_log_level(kError);
 
   logger.debug("\n{}", data);
 
