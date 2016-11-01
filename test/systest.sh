@@ -2,7 +2,7 @@
 
 echo "run systest on ${1}"
 
-main=../main
+main=../SeedCup2016.exe
 input=systest_in/${1}.c
 gcc_output=systest_out/${1}_gcc.txt
 lq_output=systest_out/${1}_lq.txt
