@@ -35,7 +35,7 @@ int ClikeInterpreter::ExecSingle(AstNode *node) {
       kInc, kDec,
       kAdd, kSub, kMul, kDiv, kAssign,
       kEQ, kNE, kGE, kGT, kLE, kLT,
-      kNumber, kIdentifier, kComma
+      kNumber, kIdentifier, kComma, kPrintf,
   };
 
   if (expr_head.find(node->symbol())
@@ -281,8 +281,9 @@ int ClikeInterpreter::ExecPrintf(AstNode *node) {
     text += raw_text[i];
   }
 
-  auto result =
-      text.length(); // Get the length of the string ready to print. It's the return value of std::printf
+  // Get the length of the string ready to print.
+  // It's the return value of std::printf
+  auto result = text.length();
 
   // Handle expression in the node of Printf
   recordLine(node);
@@ -447,8 +448,8 @@ void ClikeInterpreter::ExecDoWhile(AstNode *node) {
     }
   } while (ExecSingle(condition));
 
-  if (body->symbol()
-      == kBlock) { // if it got out from a loop block, delete all higher level
+  // if it got out from a loop block, delete all higher level
+  if (body->symbol() == kBlock) {
     table_.PopToNowLevel();
   }
 }
@@ -465,6 +466,7 @@ void ClikeInterpreter::OutputLines(const char *filename) {
     else
       fout << run_lines_[i];
   }
+  fout.flush();
   fout.close();
 }
 
