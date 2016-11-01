@@ -75,8 +75,8 @@ __在不超出测试环境的内存和CPU的限制之下：__
 
 ## 四 项目架构 ##
 
-### 源码目录结构 ###
-        Src
+### 1. 源码目录结构 ###
+       Src
         ├── clean.sh
         ├── CMakeLists.txt
         ├── common
@@ -117,7 +117,19 @@ __简单说明：__
 + src文件 <br>
   主要的实现代码
 
-## 程序结构 ##
+### 文档目录结构 ###
+
+       Doc
+        ├── bnf-1.png
+        ├── bnf-2.png
+        ├── grammar_spec.xlsx
+        ├── README.md
+        └── README.pdf
+
+__简单说明：__
+包含了若干文档资料，其中README.pdf为主要的文档。
+
+### 3. 程序结构 ##
 
 #### 功能组件
 
@@ -193,14 +205,7 @@ __简单说明：__
         Interpreter(Ast &&ast); //使用生成的AST初始化解释器
         void Exec();  //开始执行
         void OutputLines(std::string filename); //输出结果
-       
-
-       
-`clike_grammar`命名空间内用正则表达式定义了所用词法,然后使用`TokenizerBuilder`类构建词法分析器。
-构建的`Tokenizer`类为所需要的词法分析器，进行输入文件的词法分析，产生一串顺序的Tokens。
-生成的Tokens交由`ClikeParser`进行语法分析，构建抽象语法树(AST)。
-`ClikeParser`类生成的AST交由`ClikeInterpreter`类进行解释执行，完成所有计算和操作。
-`VariableTable`类为符号表，实现了作用域的分级与解释期变量的保存。
+        
 
 --------------------------------------------------------------------------------
 
