@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -rf ./Makefile ./CMakeFiles ./CMakeCache.txt ./cmake_install.cmake ./main ./test_*
+rm -rf ./Makefile ./CMakeFiles ./CMakeCache.txt ./cmake_install.cmake ./test_*
