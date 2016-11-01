@@ -17,23 +17,23 @@ add_executable(SeedCup2016.exe ${Sources})
 
 # Add some object library
 
-add_library(regex OBJECT
+add_library(regex.o OBJECT
   src/finite_automaton.cc
   src/regex_parser.cc)
 
-add_library(tokenizer OBJECT
+add_library(tokenizer.o OBJECT
   src/tokenizer.cc)
 
-add_library(ast OBJECT
+add_library(ast.o OBJECT
   src/ast.cc)
 
-add_library(clike_grammar OBJECT
+add_library(clike_grammar.o OBJECT
   src/clike_grammar.cc)
 
-add_library(clike_parser OBJECT
+add_library(clike_parser.o OBJECT
   src/clike_parser.cc)
 
-add_library(clike_interpreter OBJECT
+add_library(clike_interpreter.o OBJECT
   src/clike_interpreter.cc
   src/variable_table.cc)
 
@@ -43,28 +43,28 @@ add_executable(test_mem_manager
   test/test_mem_manager.cc)
 
 add_executable(test_regex_parser
-  $<TARGET_OBJECTS:regex>
+  $<TARGET_OBJECTS:regex.o>
   test/test_regex_parser.cc)
 
 add_executable(test_tokenizer
-  $<TARGET_OBJECTS:regex>
-  $<TARGET_OBJECTS:tokenizer>
+  $<TARGET_OBJECTS:regex.o>
+  $<TARGET_OBJECTS:tokenizer.o>
   test/test_tokenizer.cc)
 
 add_executable(test_clike_parser
-  $<TARGET_OBJECTS:regex>
-  $<TARGET_OBJECTS:tokenizer>
-  $<TARGET_OBJECTS:ast>
-  $<TARGET_OBJECTS:clike_grammar>
-  $<TARGET_OBJECTS:clike_parser>
+  $<TARGET_OBJECTS:regex.o>
+  $<TARGET_OBJECTS:tokenizer.o>
+  $<TARGET_OBJECTS:ast.o>
+  $<TARGET_OBJECTS:clike_grammar.o>
+  $<TARGET_OBJECTS:clike_parser.o>
   test/test_clike_parser.cc)
 
 
 add_executable(test_dy
-  $<TARGET_OBJECTS:regex>
-  $<TARGET_OBJECTS:tokenizer>
-  $<TARGET_OBJECTS:ast>
-  $<TARGET_OBJECTS:clike_grammar>
-  $<TARGET_OBJECTS:clike_parser>
-  $<TARGET_OBJECTS:clike_interpreter>
+  $<TARGET_OBJECTS:regex.o>
+  $<TARGET_OBJECTS:tokenizer.o>
+  $<TARGET_OBJECTS:ast.o>
+  $<TARGET_OBJECTS:clike_grammar.o>
+  $<TARGET_OBJECTS:clike_parser.o>
+  $<TARGET_OBJECTS:clike_interpreter.o>
   test/test_dy.cc)
